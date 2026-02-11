@@ -49,7 +49,7 @@
 
         /* ACCESSIBLE DIALOG: Blue ring + EXACT 1px INNER WHITE BORDER focus */
         .accessible-mode .modal-content button:focus-visible {
-            /* 1px inner white border as requested */
+            /* 1px inner white border */
             box-shadow: inset 0 0 0 1px white !important; 
             /* Blue outer indicator */
             outline: 3px solid #2563eb !important; 
@@ -79,6 +79,7 @@
             position: absolute;
             top: 50%;
             right: 100%;
+            top: 50%;
             margin-top: -5px;
             border-width: 5px;
             border-style: solid;
@@ -168,16 +169,18 @@
     <div class="demo-container bg-white shadow-2xl rounded-3xl overflow-hidden">
         
         <header class="p-4 md:p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-white sticky top-0 z-50">
-            <div class="flex flex-col gap-2">
+            <div>
                 <h1 id="txt-title" class="text-xl font-black text-gray-900 tracking-tight">Keyboard experience</h1>
-                <div class="flex gap-2 text-[10px] font-bold">
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200">
+                <!-- Language Switcher moved to the left of the toggle -->
+                <div class="flex gap-2 text-[10px] font-bold border-r border-gray-200 pr-4">
                     <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
                     <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
                     <button onclick="setLanguage('nl')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-nl">NL</button>
                 </div>
-            </div>
-            
-            <div class="flex flex-wrap items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200">
+
                 <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
                     <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
                     <label class="switch">
@@ -198,70 +201,69 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
-                <div class="space-y-8">
+                <div class="space-y-6">
+                    <!-- Fields stacked vertically -->
                     <div class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            
-                            <!-- Email Field -->
-                            <div class="flex flex-col">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">E-mail Address</label>
-                                    <div class="relative flex items-center">
-                                        <span id="emailIconBad" class="info-icon-bad w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white">i</span>
-                                        <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white hover:bg-blue-800" aria-label="E-mail information">i</button>
-                                        <div id="txt-tooltip" class="tooltip-box">Here is a help text</div>
-                                    </div>
+                        
+                        <!-- Email Field -->
+                        <div class="flex flex-col max-w-sm">
+                            <div class="flex items-center gap-2 mb-1">
+                                <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">E-mail Address</label>
+                                <div class="relative flex items-center">
+                                    <span id="emailIconBad" class="info-icon-bad w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white">i</span>
+                                    <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white hover:bg-blue-800" aria-label="E-mail information">i</button>
+                                    <div id="txt-tooltip" class="tooltip-box">Here is a help text</div>
                                 </div>
-                                <input 
-                                    type="email" 
-                                    id="inputEmail" 
-                                    class="border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
-                                    placeholder=""
-                                    autocomplete="off"
-                                    list="email-list"
-                                    oninput="forceAutocomplete(this)"
-                                >
-                                <datalist id="email-list">
-                                    <option id="email-suggestion" value="john.doe@hotmail.com">
-                                </datalist>
                             </div>
+                            <input 
+                                type="email" 
+                                id="inputEmail" 
+                                class="border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
+                                placeholder=""
+                                autocomplete="off"
+                                list="email-list"
+                                oninput="forceAutocomplete(this)"
+                            >
+                            <datalist id="email-list">
+                                <option id="email-suggestion" value="john.doe@hotmail.com">
+                            </datalist>
+                        </div>
 
-                            <!-- Birth Date -->
-                            <div class="flex flex-col relative">
-                                <label for="inputBirth" id="txt-label-birth" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Birth Date</label>
-                                <span class="text-[9px] text-gray-500 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
-                                <div class="flex gap-2">
-                                    <input 
-                                        type="text" 
-                                        id="inputBirth" 
-                                        class="flex-grow border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
-                                        value=""
-                                        onfocus="handleBirthFocus(true)"
-                                        readonly
-                                    >
-                                    <button 
-                                        type="button" 
-                                        id="calendarToggleBtn" 
-                                        class="hidden bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg border border-gray-300 transition-colors text-sm"
-                                        aria-label="Open calendar"
-                                        onclick="toggleCalendarManual()"
-                                    >
-                                        📅
-                                    </button>
+                        <!-- Birth Date below Email -->
+                        <div class="flex flex-col relative max-w-sm">
+                            <label for="inputBirth" id="txt-label-birth" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Birth Date</label>
+                            <span class="text-[9px] text-gray-500 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
+                            <div class="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    id="inputBirth" 
+                                    class="flex-grow border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
+                                    value=""
+                                    onfocus="handleBirthFocus(true)"
+                                    readonly
+                                >
+                                <button 
+                                    type="button" 
+                                    id="calendarToggleBtn" 
+                                    class="hidden bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg border border-gray-300 transition-colors text-sm"
+                                    aria-label="Open calendar"
+                                    onclick="toggleCalendarManual()"
+                                >
+                                    📅
+                                </button>
+                            </div>
+                            
+                            <div id="calendarContainer" class="calendar-popup">
+                                <div class="flex gap-2 mb-2">
+                                    <select id="monthSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
+                                    <select id="yearSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
                                 </div>
-                                
-                                <div id="calendarContainer" class="calendar-popup">
-                                    <div class="flex gap-2 mb-2">
-                                        <select id="monthSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
-                                        <select id="yearSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
-                                    </div>
-                                    <div class="calendar-grid" id="calendarGrid"></div>
-                                </div>
+                                <div class="calendar-grid" id="calendarGrid"></div>
                             </div>
                         </div>
 
                         <!-- Terms Checkbox -->
-                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200 max-w-sm">
                             <input type="checkbox" id="checkTerms" class="w-4 h-4 cursor-pointer" onchange="handleTermsToggle()">
                             <label for="checkTerms" class="text-sm font-semibold text-gray-700">
                                 <span id="txt-terms-prefix">I accept the</span> 
@@ -275,7 +277,7 @@
                         <input type="text" id="theVoid" class="absolute opacity-0 pointer-events-none" style="width:1px; height:1px;">
                     </div>
 
-                    <div class="pt-4">
+                    <div class="pt-4 max-w-sm">
                         <div id="submitBad">
                             <div id="txt-btn-bad" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-center cursor-pointer shadow transition-colors text-sm btn-disabled" onclick="showMessage('Purchase Complete!')">
                                 Complete Purchase
@@ -291,7 +293,7 @@
 
                 <!-- SIDEBAR / CRITIQUE PANEL -->
                 <div class="space-y-6">
-                    <div id="critiquePanel" class="hidden bg-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4">
+                    <div id="critiquePanel" class="hidden bg-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4 h-full">
                         <h3 id="txt-critique-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
                         <div id="critiqueContent" class="text-[11px] space-y-4 opacity-90 leading-relaxed"></div>
                     </div>
@@ -322,6 +324,7 @@
             en: {
                 title: "Keyboard experience",
                 email: "E-mail Address",
+                helpIcon: "Help icon",
                 birth: "Birth Date",
                 format: "Format: dd/mm/yyyy",
                 tooltip: "Here is a help text",
@@ -343,12 +346,14 @@
                 critiques: {
                     bad: [
                         { f: "E-mail Address", c: "The form doesn't help you fill in your address. You have to type the whole thing manually every time." },
+                        { f: "Help icon", c: "You can't reach the help text with your keyboard. It only shows up when you move your mouse over the icon." },
                         { f: "Birth Date", c: "Selecting a date is exhausting. You have to press the 'Tab' key dozens of times to move through every single day." },
                         { f: "I accept the conditions", c: "When you move through the page using your keyboard, this checkbox doesn't light up. You can't see where you are." },
                         { f: "Confirmation Dialog", c: "When the window opens, the keyboard focus doesn't jump into it automatically. It's also hard to see which button is highlighted because the border is too faint." }
                     ],
                     good: [
                         { f: "E-mail Address", c: "The browser automatically suggests your email address so you don't have to type it out manually." },
+                        { f: "Help icon", c: "The icon is now a button you can reach with your keyboard. Clicking it shows the message clearly." },
                         { f: "Birth Date", c: "You can just type the date directly, or use a quick shortcut to pick it from the calendar." },
                         { f: "I accept the conditions", c: "The checkbox now shows a clear focus ring, helping you identify exactly where you are while navigating." },
                         { f: "Confirmation Dialog", c: "Your keyboard focus jumps directly to the 'Yes' button so you can press it instantly, with a clear 1px inner white border as focus." }
@@ -358,6 +363,7 @@
             fr: {
                 title: "Expérience clavier",
                 email: "Adresse E-mail",
+                helpIcon: "Icône d'aide",
                 birth: "Date de Naissance",
                 format: "Format : jj/mm/aaaa",
                 tooltip: "Ceci est un texte d'aide",
@@ -379,6 +385,7 @@
                 critiques: {
                     bad: [
                         { f: "Adresse E-mail", c: "Le formulaire ne vous aide pas à remplir votre adresse. Vous devez tout taper manuellement." },
+                        { f: "Icône d'aide", c: "Impossible d'accéder au texte d'aide au clavier. Il ne s'affiche qu'au survol de la souris." },
                         { f: "Date de Naissance", c: "Choisir une date est épuisant. Vous devez appuyer sur 'Tab' des dizaines de fois." },
                         { f: "J'accepte les conditions", c: "Quand vous naviguez au clavier, cette case ne s'entoure pas de couleur. On ne sait pas où l'on est." },
                         { f: "Fenêtre de Confirmation", c: "Le focus ne se déplace pas automatiquement dans la fenêtre. De plus, il est difficile de voir quel bouton est sélectionné car le contour est trop discret." }
@@ -394,6 +401,7 @@
             nl: {
                 title: "Toetsenbordervaring",
                 email: "E-mailadres",
+                helpIcon: "Help-icoon",
                 birth: "Geboortedatum",
                 format: "Formaat: dd/mm/jjjj",
                 tooltip: "Hier is een helptekst",
@@ -415,6 +423,7 @@
                 critiques: {
                     bad: [
                         { f: "E-mailadres", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
+                        { f: "Help-icoon", c: "Je kunt de helptekst niet bereiken met het toetsenbord. Deze verschijnt alleen met de muis." },
                         { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
                         { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
                         { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
@@ -505,7 +514,6 @@
                 const isAccessible = document.getElementById('modeToggle').checked;
                 modal.style.display = 'flex';
                 if (isAccessible) {
-                    // Explicitly move focus to the "Yes" button in the accessible version
                     document.getElementById('btnModalOk').focus();
                 }
             } else {
@@ -627,7 +635,6 @@
 
         function openCalendar() {
             document.getElementById('calendarContainer').style.display = 'block';
-            // Start focus on month select
             document.getElementById('monthSelect').focus();
         }
 
