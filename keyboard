@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyboard experience - Checkout Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .transition-all { transition: all 0.3s ease; }
+
+        /* "The Bad Way" CSS - Deliberately breaking focus visualization */
+        .inaccessible-mode *:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Specific Exception: Always show focus on Month/Year in Calendar */
+        #monthSelect:focus, #yearSelect:focus {
+            outline: 2px solid #2563eb !important;
+            outline-offset: 1px;
+        }
+
+        /* Checkbox focus is always hidden in inaccessible mode */
+        .inaccessible-mode #checkTerms:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        /* Show focus on the checkbox in accessible version */
+        .accessible-mode #checkTerms:focus-visible {
+            outline: 2px solid #2563eb !important;
+            outline-offset: 2px;
+        }
+
+        /* INACCESSIBLE DIALOG: Subtle light blue border flush with button edge */
+        .inaccessible-mode .modal-content button:focus {
+            outline: 1px solid #93c5fd !important; 
+            outline-offset: 0px !important;
+            box-shadow: none !important;
+        }
+
+        /* "The Good Way" CSS - WCAG 2.2 Focus Appearance for general elements */
+        .accessible-mode *:focus-visible {
+            outline: 3px solid #2563eb !important;
+            outline-offset: 2px !important;
+            box-shadow: inset 0 0 0 2px white !important;
+            border-radius: 4px;
+        }
+
+        /* ACCESSIBLE DIALOG: Blue ring + EXACT 1px INNER WHITE BORDER focus */
+        .accessible-mode .modal-content button:focus-visible {
+            /* 1px inner white border as requested */
+            box-shadow: inset 0 0 0 1px white !important; 
+            /* Blue outer indicator */
+            outline: 3px solid #2563eb !important; 
+            outline-offset: 0px !important;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-box {
+            display: none;
+            position: absolute;
+            background: #1f2937;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            width: 180px;
+            z-index: 50;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .tooltip-box::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent #1f2937 transparent transparent;
+        }
+
+        .inaccessible-mode .info-icon-bad:hover + .tooltip-box { display: block; }
+        .tooltip-visible { display: block !important; }
+        .hidden-forced { display: none !important; }
+
+        /* Calendar Styling */
+        .calendar-popup {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            z-index: 40;
+            padding: 10px;
+            border-radius: 10px;
+            width: 240px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #f3f4f6;
+            padding: 4px;
+            border-radius: 6px;
+        }
+        .calendar-day {
+            padding: 4px;
+            text-align: center;
+            font-size: 10px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        /* Modal / Dialog Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        /* Custom Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ef4444; transition: .4s; border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #15803d; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        .demo-container { max-width: 1000px; margin: 0 auto; }
+        
+        .btn-disabled {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode" id="bodyTag">
+
+    <div class="demo-container bg-white shadow-2xl rounded-3xl overflow-hidden">
+        
+        <header class="p-4 md:p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-white sticky top-0 z-50">
+            <div class="flex flex-col gap-2">
+                <h1 id="txt-title" class="text-xl font-black text-gray-900 tracking-tight">Keyboard experience</h1>
+                <div class="flex gap-2 text-[10px] font-bold">
+                    <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
+                    <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
+                    <button onclick="setLanguage('nl')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-nl">NL</button>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200">
+                <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
+                    <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
+                    <label class="switch">
+                        <input type="checkbox" id="modeToggle" onchange="toggleMode()">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="text-xs font-black uppercase tracking-widest text-green-700" id="accessibleLabel">Accessible</span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Show errors</span>
+                    <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
+                </div>
+            </div>
+        </header>
+
+        <main id="mainContent" class="p-6 md:p-10">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                
+                <div class="lg:col-span-3 space-y-8">
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Email Field -->
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">E-mail Address</label>
+                                    <div class="relative flex items-center">
+                                        <span id="emailIconBad" class="info-icon-bad w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white">i</span>
+                                        <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white hover:bg-blue-800" aria-label="E-mail information">i</button>
+                                        <div id="txt-tooltip" class="tooltip-box">Here is a help text</div>
+                                    </div>
+                                </div>
+                                <input 
+                                    type="email" 
+                                    id="inputEmail" 
+                                    class="border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
+                                    placeholder=""
+                                    autocomplete="off"
+                                    list="email-list"
+                                    oninput="forceAutocomplete(this)"
+                                >
+                                <datalist id="email-list">
+                                    <option id="email-suggestion" value="john.doe@hotmail.com">
+                                </datalist>
+                            </div>
+
+                            <!-- Birth Date -->
+                            <div class="flex flex-col relative">
+                                <label for="inputBirth" id="txt-label-birth" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Birth Date</label>
+                                <span class="text-[9px] text-gray-500 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
+                                <div class="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        id="inputBirth" 
+                                        class="flex-grow border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
+                                        value=""
+                                        onfocus="handleBirthFocus(true)"
+                                        readonly
+                                    >
+                                    <button 
+                                        type="button" 
+                                        id="calendarToggleBtn" 
+                                        class="hidden bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg border border-gray-300 transition-colors text-sm"
+                                        aria-label="Open calendar"
+                                        onclick="toggleCalendarManual()"
+                                    >
+                                        📅
+                                    </button>
+                                </div>
+                                
+                                <div id="calendarContainer" class="calendar-popup">
+                                    <div class="flex gap-2 mb-2">
+                                        <select id="monthSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
+                                        <select id="yearSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
+                                    </div>
+                                    <div class="calendar-grid" id="calendarGrid"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terms Checkbox -->
+                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                            <input type="checkbox" id="checkTerms" class="w-4 h-4 cursor-pointer" onchange="handleTermsToggle()">
+                            <label for="checkTerms" class="text-sm font-semibold text-gray-700">
+                                <span id="txt-terms-prefix">I accept the</span> 
+                                <a href="https://elevenways.be" target="_blank" class="text-blue-700 underline hover:text-blue-900" id="txt-terms-link">conditions</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Hidden field "The Void" -->
+                    <div class="relative">
+                        <input type="text" id="theVoid" class="absolute opacity-0 pointer-events-none" style="width:1px; height:1px;">
+                    </div>
+
+                    <div class="pt-4">
+                        <div id="submitBad">
+                            <div id="txt-btn-bad" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-center cursor-pointer shadow transition-colors text-sm btn-disabled" onclick="showMessage('Purchase Complete!')">
+                                Complete Purchase
+                            </div>
+                        </div>
+                        <div id="submitGood" class="hidden">
+                            <button id="txt-btn-good" class="w-full bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-blue-700 transition-colors text-sm btn-disabled" disabled onclick="showMessage('Purchase Complete!')">
+                                Complete Purchase
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIDEBAR / CRITIQUE PANEL -->
+                <div class="space-y-6">
+                    <div id="critiquePanel" class="hidden bg-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4">
+                        <h3 id="txt-critique-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
+                        <div id="critiqueContent" class="text-[11px] space-y-4 opacity-90 leading-relaxed"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="txt-modal-title">
+            <h2 id="txt-modal-title" class="text-lg font-bold text-gray-900 mb-2">Confirm Terms</h2>
+            <p id="txt-modal-body" class="text-sm text-gray-600 mb-6">Are you sure you want to accept the terms and conditions?</p>
+            <div class="flex gap-3">
+                <button id="btnModalOk" onclick="closeModal(true)" class="flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">Yes</button>
+                <button id="btnModalNotOk" onclick="closeModal(false)" class="flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 transition-all pointer-events-none z-50"></div>
+
+    <script>
+        let isConfirmed = false;
+        const TARGET_EMAIL = "john.doe@hotmail.com";
+
+        const translations = {
+            en: {
+                title: "Keyboard experience",
+                email: "E-mail Address",
+                birth: "Birth Date",
+                format: "Format: dd/mm/yyyy",
+                tooltip: "Here is a help text",
+                termsPrefix: "I accept the",
+                termsLink: "conditions",
+                modalTitle: "Confirm Terms",
+                modalBody: "Are you sure you want to accept the terms and conditions?",
+                modalBtnOk: "Yes",
+                modalBtnNotOk: "No",
+                submit: "Complete Purchase",
+                showErrors: "Show errors",
+                showRemediations: "Show remediations",
+                critiqueTitleBad: "What is wrong?",
+                critiqueTitleGood: "Remediations",
+                toastSuccess: "Action Successful!",
+                months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+                statusInaccessible: "Inaccessible",
+                statusAccessible: "Accessible",
+                critiques: {
+                    bad: [
+                        { f: "E-mail Address", c: "The form doesn't help you fill in your address. You have to type the whole thing manually every time." },
+                        { f: "Birth Date", c: "Selecting a date is exhausting. You have to press the 'Tab' key dozens of times to move through every single day." },
+                        { f: "I accept the conditions", c: "When you move through the page using your keyboard, this checkbox doesn't light up. You can't see where you are." },
+                        { f: "Confirmation Dialog", c: "When the window opens, the keyboard focus doesn't jump into it automatically. It's also hard to see which button is highlighted because the border is too faint." }
+                    ],
+                    good: [
+                        { f: "E-mail Address", c: "The browser automatically suggests your email address so you don't have to type it out manually." },
+                        { f: "Birth Date", c: "You can just type the date directly, or use a quick shortcut to pick it from the calendar." },
+                        { f: "I accept the conditions", c: "The checkbox now shows a clear focus ring, helping you identify exactly where you are while navigating." },
+                        { f: "Confirmation Dialog", c: "Your keyboard focus jumps directly to the 'Yes' button so you can press it instantly, with a clear 1px inner white border as focus." }
+                    ]
+                }
+            },
+            fr: {
+                title: "Expérience clavier",
+                email: "Adresse E-mail",
+                birth: "Date de Naissance",
+                format: "Format : jj/mm/aaaa",
+                tooltip: "Ceci est un texte d'aide",
+                termsPrefix: "J'accepte les",
+                termsLink: "conditions",
+                modalTitle: "Confirmer les conditions",
+                modalBody: "Êtes-vous sûr de vouloir accepter les termes et conditions ?",
+                modalBtnOk: "Oui",
+                modalBtnNotOk: "Non",
+                submit: "Finaliser l'achat",
+                showErrors: "Afficher les erreurs",
+                showRemediations: "Afficher les corrections",
+                critiqueTitleBad: "Qu'est-ce qui ne va pas ?",
+                critiqueTitleGood: "Corrections",
+                toastSuccess: "Action réussie!",
+                months: ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
+                statusInaccessible: "Inaccessible",
+                statusAccessible: "Accessible",
+                critiques: {
+                    bad: [
+                        { f: "Adresse E-mail", c: "Le formulaire ne vous aide pas à remplir votre adresse. Vous devez tout taper manuellement." },
+                        { f: "Date de Naissance", c: "Choisir une date est épuisant. Vous devez appuyer sur 'Tab' des dizaines de fois." },
+                        { f: "J'accepte les conditions", c: "Quand vous naviguez au clavier, cette case ne s'entoure pas de couleur. On ne sait pas où l'on est." },
+                        { f: "Fenêtre de Confirmation", c: "Le focus ne se déplace pas automatiquement dans la fenêtre. De plus, il est difficile de voir quel bouton est sélectionné car le contour est trop discret." }
+                    ],
+                    good: [
+                        { f: "Adresse E-mail", c: "Le navigateur propose automatiquement votre e-mail pour vous faire gagner du temps." },
+                        { f: "Date de Naissance", c: "Vous pouvez taper la date directement ou utiliser un raccourci rapide." },
+                        { f: "J'accepte les conditions", c: "La case affiche désormais un contour de focus clair pour guider la navigation clavier." },
+                        { f: "Fenêtre de Confirmation", c: "Le curseur se place sur 'Oui' dès l'ouverture, avec une bordure blanche intérieure de 1px très visible." }
+                    ]
+                }
+            },
+            nl: {
+                title: "Toetsenbordervaring",
+                email: "E-mailadres",
+                birth: "Geboortedatum",
+                format: "Formaat: dd/mm/jjjj",
+                tooltip: "Hier is een helptekst",
+                termsPrefix: "Ik accepteer de",
+                termsLink: "voorwaarden",
+                modalTitle: "Bevestig voorwaarden",
+                modalBody: "Weet u zeker dat u de voorwaarden wilt accepteren?",
+                modalBtnOk: "Ja",
+                modalBtnNotOk: "Nee",
+                submit: "Aankoop Voltooien",
+                showErrors: "Toon fouten",
+                showRemediations: "Toon oplossingen",
+                critiqueTitleBad: "Wat is er mis?",
+                critiqueTitleGood: "Oplossingen",
+                toastSuccess: "Actie geslaagd!",
+                months: ["Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December"],
+                statusInaccessible: "Inaccessible",
+                statusAccessible: "Accessible",
+                critiques: {
+                    bad: [
+                        { f: "E-mailadres", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
+                        { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
+                        { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
+                        { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
+                    ],
+                    good: [
+                        { f: "E-mailadres", c: "De browser stelt je e-mailadres automatisch voor bij elke letter." },
+                        { f: "Geboortedatum", c: "Je kunt de datum gewoon typen of een snelle kortere weg gebruiken." },
+                        { f: "Ik accepteer de voorwaarden", c: "De checkbox toont nu een duidelijke focusrand." },
+                        { f: "Bevestigingsvenster", c: "Je focus springt direct naar de 'Ja' knop, met een duidelijke 1px witte binnenrand." }
+                    ]
+                }
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Ensures the autocomplete suggestion matches any partial input
+        function forceAutocomplete(input) {
+            if (!document.getElementById('modeToggle').checked) return;
+            const suggestion = document.getElementById('email-suggestion');
+            const val = input.value.toLowerCase();
+            suggestion.value = val.length > 0 ? TARGET_EMAIL : "";
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            document.getElementById('txt-title').innerText = t.title;
+            document.getElementById('txt-label-email').innerText = t.email;
+            document.getElementById('txt-label-birth').innerText = t.birth;
+            document.getElementById('txt-format-hint').innerText = t.format;
+            document.getElementById('txt-tooltip').innerText = t.tooltip;
+            document.getElementById('txt-terms-prefix').innerText = t.termsPrefix;
+            document.getElementById('txt-terms-link').innerText = t.termsLink;
+            document.getElementById('txt-modal-title').innerText = t.modalTitle;
+            document.getElementById('txt-modal-body').innerText = t.modalBody;
+            document.getElementById('btnModalOk').innerText = t.modalBtnOk;
+            document.getElementById('btnModalNotOk').innerText = t.modalBtnNotOk;
+            document.getElementById('txt-btn-bad').innerText = t.submit;
+            document.getElementById('txt-btn-good').innerText = t.submit;
+            document.getElementById('statusLabel').innerText = t.statusInaccessible;
+            document.getElementById('accessibleLabel').innerText = t.statusAccessible;
+            const mSelect = document.getElementById('monthSelect');
+            mSelect.innerHTML = '';
+            t.months.forEach((m, i) => {
+                const opt = document.createElement('option');
+                opt.value = (i+1).toString().padStart(2, '0');
+                opt.textContent = m;
+                if(i === 1) opt.selected = true;
+                mSelect.appendChild(opt);
+            });
+            updateModeLabels();
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.className = "lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700");
+            document.getElementById('btn-' + lang).className = "lang-btn px-2 py-1 rounded bg-blue-600 text-white";
+        }
+
+        function updateModeLabels() {
+            const isAccessible = document.getElementById('modeToggle').checked;
+            const t = translations[currentLang];
+            document.getElementById('txt-toggle-critique').innerText = isAccessible ? t.showRemediations : t.showErrors;
+            document.getElementById('txt-critique-title').innerText = isAccessible ? t.critiqueTitleGood : t.critiqueTitleBad;
+            const panel = document.getElementById('critiqueContent');
+            const data = isAccessible ? t.critiques.good : t.critiques.bad;
+            panel.innerHTML = data.map(item => `
+                <div class="mb-4">
+                    <span class="text-blue-400 font-bold block mb-1 uppercase text-[10px] tracking-tight">${item.f}</span>
+                    <p class="text-white">${item.c}</p>
+                </div>
+            `).join('');
+        }
+
+        function toggleCritiquePanel() {
+            document.getElementById('critiquePanel').classList.toggle('hidden', !document.getElementById('critiqueToggle').checked);
+        }
+
+        function toggleTooltip() {
+            if (document.getElementById('modeToggle').checked) {
+                const tt = document.getElementById('txt-tooltip');
+                tt.classList.toggle('tooltip-visible');
+                tt.classList.remove('hidden-forced');
+            }
+        }
+
+        function handleTermsToggle() {
+            const checkbox = document.getElementById('checkTerms');
+            if (checkbox.checked) {
+                const modal = document.getElementById('modalOverlay');
+                const isAccessible = document.getElementById('modeToggle').checked;
+                modal.style.display = 'flex';
+                if (isAccessible) {
+                    // Explicitly move focus to the "Yes" button in the accessible version
+                    document.getElementById('btnModalOk').focus();
+                }
+            } else {
+                isConfirmed = false;
+                updateSubmitState();
+            }
+        }
+
+        function closeModal(confirmed) {
+            const modal = document.getElementById('modalOverlay');
+            const isAccessible = document.getElementById('modeToggle').checked;
+            modal.style.display = 'none';
+            
+            if (confirmed) {
+                isConfirmed = true;
+            } else {
+                isConfirmed = false;
+                document.getElementById('checkTerms').checked = false;
+            }
+            
+            updateSubmitState();
+            
+            if (isAccessible) {
+                document.getElementById('checkTerms').focus();
+            }
+        }
+
+        function updateSubmitState() {
+            const badBtn = document.getElementById('txt-btn-bad');
+            const goodBtn = document.getElementById('txt-btn-good');
+            if (isConfirmed) {
+                badBtn.classList.remove('btn-disabled');
+                goodBtn.classList.remove('btn-disabled');
+                goodBtn.removeAttribute('disabled');
+            } else {
+                badBtn.classList.add('btn-disabled');
+                goodBtn.classList.add('btn-disabled');
+                goodBtn.setAttribute('disabled', 'true');
+            }
+        }
+
+        function toggleMode() {
+            const isAccessible = document.getElementById('modeToggle').checked;
+            const bodyTag = document.getElementById('bodyTag');
+            
+            renderCalendar(isAccessible);
+            const inputBirth = document.getElementById('inputBirth');
+            const inputEmail = document.getElementById('inputEmail');
+            
+            document.getElementById('txt-tooltip').classList.remove('tooltip-visible', 'hidden-forced');
+
+            if (isAccessible) {
+                bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 accessible-mode";
+                inputBirth.removeAttribute('readonly');
+                document.getElementById('calendarToggleBtn').classList.remove('hidden');
+                inputEmail.setAttribute('autocomplete', 'email');
+            } else {
+                bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode";
+                inputBirth.setAttribute('readonly', true);
+                document.getElementById('calendarToggleBtn').classList.add('hidden');
+                document.getElementById('calendarContainer').style.display = 'none';
+                inputEmail.setAttribute('autocomplete', 'off');
+            }
+            updateModeLabels();
+            updateSubmitState();
+        }
+
+        function populateYears() {
+            const yearSelect = document.getElementById('yearSelect');
+            yearSelect.innerHTML = '';
+            for (let yr = 2026; yr >= 1970; yr--) {
+                const opt = document.createElement('option');
+                opt.value = yr; opt.textContent = yr;
+                yearSelect.appendChild(opt);
+            }
+        }
+
+        function renderCalendar(isAccessible) {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= 30; i++) {
+                const dayStr = i.toString().padStart(2, '0');
+                if (isAccessible) {
+                    const d = document.createElement('div');
+                    d.className = "calendar-day text-gray-400 cursor-pointer hover:bg-blue-50";
+                    d.innerText = i; d.onclick = () => selectDate(dayStr);
+                    grid.appendChild(d);
+                } else {
+                    const b = document.createElement('button');
+                    b.type = "button"; b.className = "calendar-day hover:bg-blue-100 focus:bg-blue-200";
+                    b.innerText = i; b.onclick = () => selectDate(dayStr);
+                    grid.appendChild(b);
+                }
+            }
+        }
+
+        function selectDate(day) {
+            const input = document.getElementById('inputBirth');
+            const month = document.getElementById('monthSelect').value;
+            const year = document.getElementById('yearSelect').value;
+            input.value = `${day}/${month}/${year}`;
+            document.getElementById('calendarContainer').style.display = 'none';
+        }
+
+        function handleBirthFocus(isFocused) {
+            if (isFocused && !document.getElementById('modeToggle').checked) {
+                openCalendar();
+            }
+        }
+
+        function toggleCalendarManual() {
+            const c = document.getElementById('calendarContainer');
+            if (c.style.display === 'block') {
+                c.style.display = 'none';
+            } else {
+                openCalendar();
+            }
+        }
+
+        function openCalendar() {
+            document.getElementById('calendarContainer').style.display = 'block';
+            // Start focus on month select
+            document.getElementById('monthSelect').focus();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('calendarContainer').style.display = 'none';
+                if(document.getElementById('modalOverlay').style.display === 'flex') closeModal(false);
+                if (document.getElementById('modeToggle').checked) {
+                    document.querySelectorAll('.tooltip-box').forEach(t => t.classList.add('hidden-forced'));
+                }
+            }
+        });
+
+        document.addEventListener('focusin', (e) => {
+            if (document.getElementById('modeToggle').checked) {
+                const birthArea = document.getElementById('inputBirth').parentElement.parentElement;
+                if (birthArea && !birthArea.contains(e.target)) document.getElementById('calendarContainer').style.display = 'none';
+            }
+        });
+
+        function showMessage(msg) {
+            if (!isConfirmed) return;
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 3000);
+        }
+
+        populateYears();
+        setLanguage('en');
+        toggleMode();
+    </script>
+</body>
+</html>
