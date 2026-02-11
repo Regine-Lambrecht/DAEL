@@ -246,9 +246,10 @@
 
         <main id="mainContent" class="p-6 md:p-10">
             
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Grid rebalanced: 1/4 for form, 3/4 for sidebar/issues -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 
-                <div class="space-y-6">
+                <div class="lg:col-span-1 space-y-6">
                     <div class="space-y-6">
                         
                         <!-- Name Field -->
@@ -343,7 +344,8 @@
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <!-- Sidebar expanded to 3/4 -->
+                <div class="lg:col-span-3 space-y-6">
                     <div id="critiquePanel" class="hidden bg-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4 h-full">
                         <h3 id="txt-critique-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
                         <div id="critiqueContent" class="text-[11px] space-y-4 opacity-90 leading-relaxed"></div>
@@ -484,17 +486,17 @@
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "E-mailadres", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
+                        { f: "Naam Voornaam", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
                         { f: "Help-icoon", c: "De helptekst verschijnt alleen bij mouseover. Toetsenbordgebruikers kunnen deze informatie niet zien." },
-                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de e-mail en de datum. Je raakt de weg kwijt op de pagina." },
+                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de naam en de datum. Je raakt de weg kwijt op de pagina." },
                         { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
                         { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
                         { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
                     ],
                     good: [
-                        { f: "E-mailadres", c: "De browser stelt je e-mailadres automatisch voor bij elke letter." },
+                        { f: "Naam Voornaam", c: "De browser stelt je naam automatisch voor bij elke letter." },
                         { f: "Help-icoon", c: "Informatie verschijnt bij mouseover en klik. We hebben de focus-trigger verwijderd voor een rustiger keyboard-traject." },
-                        { f: "Verborgen veld", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
+                        { f: "Hidden field", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
                         { f: "Geboortedatum", c: "De kalenderknop is nu geïntegreerd in het veld en focusbaar, en invoer is verbeterd met een masker." },
                         { f: "Ik accepteer de voorwaarden", c: "De checkbox toont nu een duidelijke focusrand." },
                         { f: "Bevestigingsvenster", c: "Je focus springt direct naar de 'Ja' knop, met een duidelijke 1px witte binnenrand." }
