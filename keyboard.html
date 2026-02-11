@@ -8,6 +8,12 @@
     <style>
         .transition-all { transition: all 0.3s ease; }
 
+        /* Hide the default dropdown arrow for datalists/email fields */
+        input::-webkit-calendar-picker-indicator {
+            display: none !important;
+            -webkit-appearance: none;
+        }
+
         /* "The Bad Way" CSS - Deliberately breaking focus visualization */
         .inaccessible-mode *:focus {
             outline: none !important;
@@ -49,9 +55,7 @@
 
         /* ACCESSIBLE DIALOG: Blue ring + EXACT 1px INNER WHITE BORDER focus */
         .accessible-mode .modal-content button:focus-visible {
-            /* 1px inner white border */
             box-shadow: inset 0 0 0 1px white !important; 
-            /* Blue outer indicator */
             outline: 3px solid #2563eb !important; 
             outline-offset: 0px !important;
         }
@@ -86,7 +90,10 @@
             border-color: transparent #1f2937 transparent transparent;
         }
 
+        /* Inaccessible version: Show on hover */
         .inaccessible-mode .info-icon-bad:hover + .tooltip-box { display: block; }
+        
+        /* State managers for tooltip */
         .tooltip-visible { display: block !important; }
         .hidden-forced { display: none !important; }
 
@@ -174,7 +181,6 @@
             </div>
             
             <div class="flex flex-wrap items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200">
-                <!-- Language Switcher moved to the left of the toggle -->
                 <div class="flex gap-2 text-[10px] font-bold border-r border-gray-200 pr-4">
                     <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
                     <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
@@ -202,7 +208,6 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
                 <div class="space-y-6">
-                    <!-- Fields stacked vertically -->
                     <div class="space-y-6">
                         
                         <!-- Email Field -->
@@ -229,7 +234,7 @@
                             </datalist>
                         </div>
 
-                        <!-- Birth Date below Email -->
+                        <!-- Birth Date -->
                         <div class="flex flex-col relative max-w-sm">
                             <label for="inputBirth" id="txt-label-birth" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Birth Date</label>
                             <span class="text-[9px] text-gray-500 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
@@ -392,6 +397,7 @@
                     ],
                     good: [
                         { f: "Adresse E-mail", c: "Le navigateur propose automatiquement votre e-mail pour vous faire gagner du temps." },
+                        { f: "Icône d'aide", c: "L'icône est maintenant un bouton accessible au clavier. Cliquez dessus pour voir le message." },
                         { f: "Date de Naissance", c: "Vous pouvez taper la date directement ou utiliser un raccourci rapide." },
                         { f: "J'accepte les conditions", c: "La case affiche désormais un contour de focus clair pour guider la navigation clavier." },
                         { f: "Fenêtre de Confirmation", c: "Le curseur se place sur 'Oui' dès l'ouverture, avec une bordure blanche intérieure de 1px très visible." }
@@ -430,6 +436,7 @@
                     ],
                     good: [
                         { f: "E-mailadres", c: "De browser stelt je e-mailadres automatisch voor bij elke letter." },
+                        { f: "Help-icoon", c: "Het icoon is nu een knop die je met het toetsenbord kunt bereiken. Klik erop om het bericht te zien." },
                         { f: "Geboortedatum", c: "Je kunt de datum gewoon typen of een snelle kortere weg gebruiken." },
                         { f: "Ik accepteer de voorwaarden", c: "De checkbox toont nu een duidelijke focusrand." },
                         { f: "Bevestigingsvenster", c: "Je focus springt direct naar de 'Ja' knop, met een duidelijke 1px witte binnenrand." }
@@ -440,7 +447,6 @@
 
         let currentLang = 'en';
 
-        // Ensures the autocomplete suggestion matches any partial input
         function forceAutocomplete(input) {
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
@@ -559,6 +565,13 @@
             const isAccessible = document.getElementById('modeToggle').checked;
             const bodyTag = document.getElementById('bodyTag');
             
+            // Empty the form when switching modes
+            document.getElementById('inputEmail').value = '';
+            document.getElementById('inputBirth').value = '';
+            document.getElementById('checkTerms').checked = false;
+            isConfirmed = false;
+            updateSubmitState();
+
             renderCalendar(isAccessible);
             const inputBirth = document.getElementById('inputBirth');
             const inputEmail = document.getElementById('inputEmail');
@@ -570,15 +583,22 @@
                 inputBirth.removeAttribute('readonly');
                 document.getElementById('calendarToggleBtn').classList.remove('hidden');
                 inputEmail.setAttribute('autocomplete', 'email');
+                document.getElementById('emailIconBad').classList.add('hidden');
+                document.getElementById('emailIconGood').classList.remove('hidden');
+                document.getElementById('submitBad').classList.add('hidden');
+                document.getElementById('submitGood').classList.remove('hidden');
             } else {
                 bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode";
                 inputBirth.setAttribute('readonly', true);
                 document.getElementById('calendarToggleBtn').classList.add('hidden');
                 document.getElementById('calendarContainer').style.display = 'none';
                 inputEmail.setAttribute('autocomplete', 'off');
+                document.getElementById('emailIconBad').classList.remove('hidden');
+                document.getElementById('emailIconGood').classList.add('hidden');
+                document.getElementById('submitBad').classList.remove('hidden');
+                document.getElementById('submitGood').classList.add('hidden');
             }
             updateModeLabels();
-            updateSubmitState();
         }
 
         function populateYears() {
