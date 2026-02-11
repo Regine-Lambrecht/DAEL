@@ -122,7 +122,7 @@
             left: 0;
             margin-top: 0.5rem;
             background: white;
-            border: 1px solid #6b7280; /* Higher contrast border */
+            border: 1px solid #6b7280;
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             z-index: 40;
             padding: 10px;
@@ -133,17 +133,38 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
+            gap: 4px;
             background: #f3f4f6;
-            padding: 4px;
+            padding: 6px;
             border-radius: 6px;
         }
+        
         .calendar-day {
-            padding: 4px;
-            text-align: center;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 10px;
             background: white;
-            border-radius: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        /* Inaccessible Focus: Blue background + white text */
+        .inaccessible-mode .calendar-day:focus {
+            background-color: #2563eb !important;
+            color: white !important;
+            outline: none !important;
+        }
+
+        /* Accessible Focus: Blue Circle */
+        .accessible-mode .calendar-day:focus-visible {
+            outline: none !important;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #2563eb !important;
+            border-radius: 9999px !important;
+            z-index: 10;
         }
 
         /* Modal Styles */
@@ -235,16 +256,12 @@
                             <div class="flex items-center gap-2 mb-1">
                                 <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Name Surname</label>
                                 <div class="relative flex items-center">
-                                    <!-- Inaccessible Hit area (24x24) with smaller visual icon (16x16) -->
-                                    <span id="emailIconBad" class="info-icon-bad w-6 h-6 flex items-center justify-center cursor-help" tabindex="0">
+                                    <span id="emailIconBad" class="info-icon-bad w-6 h-6 flex items-center justify-center cursor-help">
                                         <span class="w-4 h-4 rounded-full bg-blue-700 text-[9px] flex items-center justify-center font-bold text-white">i</span>
                                     </span>
-                                    
-                                    <!-- Accessible Hit area (24x24) with smaller visual icon (16x16) -->
                                     <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-6 h-6 flex items-center justify-center cursor-help hover:opacity-80" aria-label="Name information">
                                         <span class="w-4 h-4 rounded-full bg-blue-700 text-[9px] flex items-center justify-center font-bold text-white">i</span>
                                     </button>
-                                    
                                     <div id="txt-tooltip" class="tooltip-box">Here is a help text</div>
                                 </div>
                             </div>
@@ -270,7 +287,7 @@
                         <div class="flex flex-col relative w-48">
                             <label for="inputBirth" id="txt-label-birth" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Birth Date</label>
                             <span class="text-[9px] text-gray-600 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
-                            <div class="relative flex items-center">
+                            <div class="relative flex items-center" id="birthFieldWrapper">
                                 <input 
                                     type="text" 
                                     id="inputBirth" 
@@ -279,7 +296,6 @@
                                     onfocus="handleBirthFocus(true)"
                                     readonly
                                 >
-                                <!-- Icon Area INSIDE the field, target size 24x24px -->
                                 <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2">
                                     <span id="calendarIconBad" class="w-6 h-6 flex items-center justify-center text-sm cursor-default">📅</span>
                                     <button 
@@ -294,7 +310,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Calendar Popup -->
                             <div id="calendarContainer" class="calendar-popup">
                                 <div class="flex gap-2 mb-2">
                                     <select id="monthSelect" class="text-[10px] border border-gray-500 p-1 rounded bg-white w-1/2"></select>
@@ -328,7 +343,6 @@
                     </div>
                 </div>
 
-                <!-- SIDEBAR / CRITIQUE PANEL -->
                 <div class="space-y-6">
                     <div id="critiquePanel" class="hidden bg-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4 h-full">
                         <h3 id="txt-critique-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
@@ -438,7 +452,7 @@
                         { f: "Nom Prénom", c: "Le navigateur propose automatiquement votre nom pour vous faire gagner du temps." },
                         { f: "Icône d'aide", c: "L'info s'affiche au survol et au clic. Nous avons retiré le déclencheur au focus pour ne pas encombrer le flux clavier." },
                         { f: "Champ invisible", c: "Cet arrêt inutile a été supprimé pour garantir un parcours fluide dans le formulaire." },
-                        { f: "Date de Naissance", c: "La saisie est simplifiée par un masque automatique qui gère les '/' pour vous." },
+                        { f: "Date de Naissance", c: "Le bouton calendrier est intégré au champ et focalisable, et la saisie est simplifiée par un masque automatique." },
                         { f: "J'accepte les conditions", c: "La case affiche désormais un contour de focus clair pour guider la navigation clavier." },
                         { f: "Fenêtre de Confirmation", c: "Le curseur se place sur 'Oui' dès l'ouverture, avec une bordure blanche intérieure de 1px très visible." }
                     ]
@@ -470,17 +484,17 @@
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "Naam Voornaam", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
+                        { f: "E-mailadres", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
                         { f: "Help-icoon", c: "De helptekst verschijnt alleen bij mouseover. Toetsenbordgebruikers kunnen deze informatie niet zien." },
-                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de naam en de datum. Je raakt de weg kwijt op de pagina." },
+                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de e-mail en de datum. Je raakt de weg kwijt op de pagina." },
                         { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
                         { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
                         { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
                     ],
                     good: [
-                        { f: "Naam Voornaam", c: "De browser stelt je naam automatisch voor bij elke letter." },
+                        { f: "E-mailadres", c: "De browser stelt je e-mailadres automatisch voor bij elke letter." },
                         { f: "Help-icoon", c: "Informatie verschijnt bij mouseover en klik. We hebben de focus-trigger verwijderd voor een rustiger keyboard-traject." },
-                        { f: "Hidden field", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
+                        { f: "Verborgen veld", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
                         { f: "Geboortedatum", c: "De kalenderknop is nu geïntegreerd in het veld en focusbaar, en invoer is verbeterd met een masker." },
                         { f: "Ik accepteer de voorwaarden", c: "De checkbox toont nu een duidelijke focusrand." },
                         { f: "Bevestigingsvenster", c: "Je focus springt direct naar de 'Ja' knop, met een duidelijke 1px witte binnenrand." }
@@ -491,7 +505,6 @@
 
         let currentLang = 'en';
 
-        // Ensures the autocomplete suggestion matches partial input
         function forceAutocomplete(input) {
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
@@ -499,7 +512,6 @@
             suggestion.value = val.length > 0 ? TARGET_NAME : "";
         }
 
-        // Mask logic for dd/mm/yyyy
         function handleDateInput(e) {
             let val = e.target.value.replace(/\D/g, ''); 
             if (val.length > 8) val = val.substring(0, 8);
@@ -541,7 +553,7 @@
                 const opt = document.createElement('option');
                 opt.value = (i+1).toString().padStart(2, '0');
                 opt.textContent = m;
-                if(i === 1) opt.selected = true;
+                if(i === 1) opt.selected = true; // Default Feb
                 mSelect.appendChild(opt);
             });
             updateModeLabels();
@@ -632,6 +644,10 @@
         function toggleMode() {
             const isAccessible = document.getElementById('modeToggle').checked;
             const bodyTag = document.getElementById('bodyTag');
+            const calContainer = document.getElementById('calendarContainer');
+            
+            // Explicitly hide calendar when switching modes
+            calContainer.style.display = 'none';
             
             document.getElementById('inputEmail').value = '';
             document.getElementById('inputBirth').value = '';
@@ -659,14 +675,12 @@
                 document.getElementById('submitBad').classList.add('hidden');
                 document.getElementById('submitGood').classList.remove('hidden');
                 theVoid.style.display = 'none';
-                theVoid.setAttribute('tabindex', '-1');
             } else {
                 bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode";
                 inputBirth.setAttribute('readonly', true);
                 inputBirth.oninput = null;
                 document.getElementById('calendarToggleBtn').classList.add('hidden');
                 document.getElementById('calendarIconBad').classList.remove('hidden');
-                document.getElementById('calendarContainer').style.display = 'none';
                 inputEmail.setAttribute('autocomplete', 'off');
                 inputEmail.removeAttribute('list');
                 document.getElementById('emailIconBad').classList.remove('hidden');
@@ -674,7 +688,6 @@
                 document.getElementById('submitBad').classList.remove('hidden');
                 document.getElementById('submitGood').classList.add('hidden');
                 theVoid.style.display = 'block';
-                theVoid.removeAttribute('tabindex');
             }
             updateModeLabels();
         }
@@ -692,19 +705,39 @@
         function renderCalendar(isAccessible) {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            for (let i = 1; i <= 30; i++) {
+            const today = new Date().getDate(); // 11
+            const currentMonth = "02"; // February
+            const currentYear = "2026";
+
+            for (let i = 1; i <= 28; i++) {
                 const dayStr = i.toString().padStart(2, '0');
-                if (isAccessible) {
-                    const d = document.createElement('div');
-                    d.className = "calendar-day text-gray-400 cursor-pointer hover:bg-blue-50";
-                    d.innerText = i; d.onclick = () => selectDate(dayStr);
-                    grid.appendChild(d);
-                } else {
-                    const b = document.createElement('button');
-                    b.type = "button"; b.className = "calendar-day hover:bg-blue-100 focus:bg-blue-200";
-                    b.innerText = i; b.onclick = () => selectDate(dayStr);
-                    grid.appendChild(b);
+                const isToday = i === today;
+                
+                const d = document.createElement('div');
+                d.className = "calendar-day";
+                d.innerText = i;
+                
+                if (isToday) {
+                    d.classList.add('bg-blue-600', 'text-white');
                 }
+
+                if (isAccessible) {
+                    d.setAttribute('tabindex', '0');
+                    d.onclick = () => selectDate(dayStr);
+                    // Standard accessible selection handling for keyboard
+                    d.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') selectDate(dayStr); };
+                } else {
+                    // Inaccessible version uses actual button to show default behaviors
+                    const b = document.createElement('button');
+                    b.type = "button";
+                    b.className = "calendar-day w-full h-full flex items-center justify-center rounded";
+                    b.innerText = i;
+                    if (isToday) b.classList.add('bg-blue-600', 'text-white');
+                    b.onclick = () => selectDate(dayStr);
+                    d.innerHTML = '';
+                    d.appendChild(b);
+                }
+                grid.appendChild(d);
             }
         }
 
@@ -717,6 +750,7 @@
         }
 
         function handleBirthFocus(isFocused) {
+            // Only auto-open in inaccessible mode
             if (isFocused && !document.getElementById('modeToggle').checked) {
                 openCalendar();
             }
@@ -732,7 +766,8 @@
         }
 
         function openCalendar() {
-            document.getElementById('calendarContainer').style.display = 'block';
+            const c = document.getElementById('calendarContainer');
+            c.style.display = 'block';
             document.getElementById('monthSelect').focus();
         }
 
@@ -748,8 +783,11 @@
 
         document.addEventListener('focusin', (e) => {
             if (document.getElementById('modeToggle').checked) {
-                const birthArea = document.getElementById('inputBirth').parentElement;
-                if (birthArea && !birthArea.contains(e.target)) document.getElementById('calendarContainer').style.display = 'none';
+                const birthArea = document.getElementById('birthFieldWrapper');
+                const calendarArea = document.getElementById('calendarContainer');
+                if (birthArea && !birthArea.contains(e.target) && calendarArea && !calendarArea.contains(e.target)) {
+                    document.getElementById('calendarContainer').style.display = 'none';
+                }
             }
         });
 
