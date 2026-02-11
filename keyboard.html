@@ -230,7 +230,7 @@
                 <div class="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200 w-full">
                     <!-- Left Side: Toggle -->
                     <div class="flex items-center gap-4">
-                        <div class="flex items-center gap-2 pr-4">
+                        <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
                             <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
                             <label class="switch">
                                 <input 
@@ -390,6 +390,16 @@
                             >
                                 Issues
                             </button>
+                            <button 
+                                id="tab-user" 
+                                role="tab" 
+                                aria-selected="false" 
+                                aria-controls="panel-user" 
+                                onclick="switchTab('user')"
+                                class="tab-btn px-6 py-4 text-xs font-black uppercase tracking-widest transition-all focus:outline-none border-l border-gray-700"
+                            >
+                                Impacted users
+                            </button>
                         </div>
 
                         <!-- Panel: How to Test -->
@@ -404,6 +414,14 @@
                         <div id="panel-feedback" role="tabpanel" aria-labelledby="tab-feedback" class="p-8 space-y-6 hidden flex-grow">
                             <h3 id="txt-feedback-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
                             <div id="critiqueContent" class="text-sm space-y-6 opacity-95 leading-relaxed"></div>
+                        </div>
+
+                        <!-- Panel: Impacted Users -->
+                        <div id="panel-user" role="tabpanel" aria-labelledby="tab-user" class="p-8 space-y-6 hidden flex-grow">
+                            <h3 id="txt-user-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">Who needs alternatives to mouse-only access?</h3>
+                            <div id="txt-user-text" class="text-sm opacity-95 leading-relaxed">
+                                <!-- Content populated by JS -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -448,12 +466,21 @@
                 tabTest: "How to test",
                 tabIssues: "Issues",
                 tabRemediations: "Remediations",
+                tabUser: "Impacted users",
                 testTitle: "Step-by-step guide",
                 testSteps: [
                     "Fill the inaccessible form with your mouse.",
                     "Refresh the page and try with only the keyboard (keys: tab, arrow, enter, space).",
                     "Switch to the accessible version of the form.",
                     "Fill the form with only the keyboard again."
+                ],
+                userTitle: "Who needs alternatives to mouse-only access?",
+                userIntro: "Keyboard accessibility is vital for many different people:",
+                userList: [
+                    "**Blind users** cannot see a mouse cursor and rely on screen readers and keyboard commands to navigate digital content.",
+                    "**Users with motor impairments** might lack the precision required for a mouse and find keyboard-only interaction more reliable.",
+                    "**Expert or 'power users'** often prefer keyboard shortcuts to significantly speed up their workflow and data entry.",
+                    "**Touchscreen users** can be excluded if a website depends strictly on mouse-only actions like 'hovering'."
                 ],
                 introGood: "Did you notice that the page hasn't visually changed ? Yet the form is now keyboard-friendly. Here is how:",
                 feedbackTitleBad: "What is wrong?",
@@ -499,12 +526,21 @@
                 tabTest: "Comment tester",
                 tabIssues: "Problèmes",
                 tabRemediations: "Corrections",
+                tabUser: "Utilisateurs impactés",
                 testTitle: "Guide étape par étape",
                 testSteps: [
                     "Remplissez le formulaire inaccessible avec votre souris.",
                     "Rafraîchissez la page et essayez uniquement avec le clavier (touches : tab, flèches, entrée, espace).",
                     "Passez à la version accessible du formulaire.",
                     "Remplissez à nouveau le formulaire uniquement avec le clavier."
+                ],
+                userTitle: "Qui a besoin d'une alternative à la souris ?",
+                userIntro: "L'accessibilité au clavier est vitale pour de nombreuses personnes :",
+                userList: [
+                    "**Utilisateurs aveugles** : Ils ne voient pas le curseur et utilisent des lecteurs d'écran et des commandes clavier pour naviguer.",
+                    "**Utilisateurs ayant un handicap moteur** : Ils peuvent manquer de précision avec une souris et préfèrent le clavier.",
+                    "**Utilisateurs experts** : Ils privilégient souvent les raccourcis clavier pour gagner du temps et de l'efficacité.",
+                    "**Utilisateurs d'écrans tactiles** : Ils peuvent être bloqués si un site nécessite impérativement l'usage d'une souris (survol, etc.)."
                 ],
                 introGood: "Avez-vous remarqué que la page n'a pas changé visuellement ? Pourtant, le formulaire est désormais adapté au clavier. Voici comment :",
                 feedbackTitleBad: "Le problème ?",
@@ -518,7 +554,7 @@
                         { f: "Champ Nom", c: "Votre nom n'est pas proposé automatiquement. Vous devez tout taper à la main à chaque fois." },
                         { f: "Bulle d'aide", c: "L'info est cachée si vous n'utilisez pas de souris. Les utilisateurs clavier ne peuvent pas la voir." },
                         { f: "Le Vide", c: "Il y a une zone invisible entre les cases. Votre curseur s'y perd et vous ne savez plus où vous êtes." },
-                        { f: "Date du passeport", c: "Choisir une date est trop long. Il faut cliquer de nombreuses fois pour arriver à l'année." },
+                        { f: "Mise à jour", c: "Choisir une date est trop long. Il faut cliquer de nombreuses fois pour arriver à l'année." },
                         { f: "Cases à cocher", c: "On ne voit pas quand la case est sélectionnée au clavier. Elle n'est pas mise en évidence." },
                         { f: "Fenêtres", c: "La fenêtre s'ouvre mais on ne voit pas quel bouton est prêt à être cliqué." }
                     ],
@@ -550,12 +586,21 @@
                 tabTest: "Hoe te testen",
                 tabIssues: "Problemen",
                 tabRemediations: "Oplossingen",
+                tabUser: "Geïmpacteerde gebruikers",
                 testTitle: "Stapsgewijze handleiding",
                 testSteps: [
                     "Vul het ontoegankelijke formulier in met je muis.",
                     "Vernieuw de pagina en probeer het alleen met het toetsenbord (toetsen: tab, pijltjes, enter, spatie).",
                     "Schakel over naar de toegankelijke versie van het formulier.",
                     "Vul het formulier nogmaals in met alleen het toetsenbord."
+                ],
+                userTitle: "Wie heeft een alternatief voor muis-interactie nodig?",
+                userIntro: "Toetsenbordtoegankelijkheid is essentieel voor veel verschillende mensen:",
+                userList: [
+                    "**Blinde gebruikers** : Zij zien de muiscursor niet en navigeren met schermlezers en toetsenbordcommando's.",
+                    "**Gebruikers met een motorische beperking** : Zij hebben soms niet de fijne motoriek die nodig is voor een muis.",
+                    "**Expert-gebruikers** : Zij geven vaak de voorkeur aan sneltoetsen om aanzienlijk sneller te werken.",
+                    "**Touchscreen-gebruikers** : Zij kunnen hinder ondervinden als een site muis-specifieke interacties zoals 'hoveren' vereist."
                 ],
                 introGood: "Heb je gemerkt dat de pagina visueel niet is veranderd? Toch is het formulier nu toetsenbordvriendelijk. Hier is hoe:",
                 feedbackTitleBad: "Wat is er mis?",
@@ -601,12 +646,21 @@
                 tabTest: "Wie man testet",
                 tabIssues: "Probleme",
                 tabRemediations: "Lösungen",
+                tabUser: "Betroffene Nutzer",
                 testTitle: "Schritt-für-Schritt-Anleitung",
                 testSteps: [
                     "Füllen Sie das unzugängliche Formular mit Ihrer Maus aus.",
                     "Aktualisieren Sie die Seite und versuchen Sie es nur mit der Tastatur (Tasten: Tab, Pfeile, Eingabe, Leertaste).",
                     "Wechseln Sie zur zugänglichen Version des Formulars.",
                     "Füllen Sie das Formular erneut nur mit der Tastatur aus."
+                ],
+                userTitle: "Wer benötigt Alternativen zur reinen Mausbedienung?",
+                userIntro: "Tastaturbedienbarkeit ist für viele Menschen von entscheidender Bedeutung:",
+                userList: [
+                    "**Blinde Anwender** : Sie sehen den Mauszeiger nicht und nutzen Screenreader sowie Tastaturbefehle.",
+                    "**Nutzer mit motorischen Einschränkungen** : Sie verfügen oft nicht über die für eine Maus erforderliche Präzision.",
+                    "**Power-User** : Sie bevorzugen oft Tastaturkürzel, um deutlich schneller zu arbeiten.",
+                    "**Touchscreen-Nutzer** : Sie können blockiert sein, wenn eine Webseite zwingend eine Maus (z. B. „Hover“) voraussetzt."
                 ],
                 introGood: "Haben Sie bemerkt, dass sich die Seite optisch nicht verändert hat? Dennoch ist das Formular nun tastaturfreundlich. Hier ist der Grund:",
                 feedbackTitleBad: "Was ist falsch?",
@@ -638,7 +692,6 @@
 
         let currentLang = 'en';
 
-        // Autocomplete suggestions
         function forceAutocomplete(input) {
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
@@ -661,12 +714,13 @@
         }
 
         function switchTab(tabId) {
-            const isTest = tabId === 'test';
-            document.getElementById('panel-test').classList.toggle('hidden', !isTest);
-            document.getElementById('panel-feedback').classList.toggle('hidden', isTest);
-            
-            document.getElementById('tab-test').setAttribute('aria-selected', isTest);
-            document.getElementById('tab-feedback').setAttribute('aria-selected', !isTest);
+            const panels = ['test', 'feedback', 'user'];
+            panels.forEach(id => {
+                const panel = document.getElementById('panel-' + id);
+                const tab = document.getElementById('tab-' + id);
+                if (panel) panel.classList.toggle('hidden', id !== tabId);
+                if (tab) tab.setAttribute('aria-selected', id === tabId);
+            });
         }
 
         function setLanguage(lang) {
@@ -722,15 +776,24 @@
             const accessibleLabelEl = document.getElementById('accessibleLabel');
             if (accessibleLabelEl) accessibleLabelEl.innerText = t.statusAccessible;
 
-            // Tab Buttons
+            // Tabs
             document.getElementById('tab-test').innerText = t.tabTest;
             document.getElementById('tab-feedback').innerText = isAccessible ? t.tabRemediations : t.tabIssues;
+            document.getElementById('tab-user').innerText = t.tabUser;
 
-            // How to Test Panel
+            // Step-by-Step Panel
             document.getElementById('txt-test-title').innerText = t.testTitle;
             const stepsList = document.getElementById('txt-test-steps');
-            stepsList.innerHTML = t.testSteps.map(step => `<li>${step}</li>`).join('');
+            if (stepsList) stepsList.innerHTML = t.testSteps.map(step => `<li>${step}</li>`).join('');
             
+            // Impacted Users Panel
+            document.getElementById('txt-user-title').innerText = t.userTitle;
+            const userTextEl = document.getElementById('txt-user-text');
+            if (userTextEl) {
+                const listHtml = t.userList.map(item => `<li>${item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`).join('');
+                userTextEl.innerHTML = `<p class="mb-4">${t.userIntro}</p><ul class="space-y-3 list-disc pl-5">${listHtml}</ul>`;
+            }
+
             const mSelect = document.getElementById('monthSelect');
             if (mSelect) {
                 mSelect.innerHTML = '';
