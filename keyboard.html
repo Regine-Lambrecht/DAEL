@@ -8,20 +8,20 @@
     <style>
         .transition-all { transition: all 0.3s ease; }
 
-        /* Hide the default dropdown arrow for datalists/fields */
+        /* Hide default dropdown icons */
         input::-webkit-calendar-picker-indicator {
             display: none !important;
             -webkit-appearance: none;
             opacity: 0;
         }
 
-        /* "The Bad Way" CSS - Deliberately breaking focus visualization */
+        /* Deliberately breaking focus visualization for "The Bad Way" */
         .inaccessible-mode *:focus {
             outline: none !important;
             box-shadow: none !important;
         }
 
-        /* --- PERSISTENT KEYBOARD ACCESSIBILITY FOR LAB CONTROLS --- */
+        /* Persistent keyboard accessibility for the actual lab controls */
         .lang-btn:focus-visible, 
         #critiqueToggle:focus-visible {
             outline: 2px solid #2563eb !important;
@@ -35,13 +35,12 @@
             box-shadow: 0 0 0 2px white;
         }
 
-        /* Always show focus on Month/Year in Calendar */
+        /* Focus styles for select elements in calendar */
         #monthSelect:focus, #yearSelect:focus {
             outline: 2px solid #2563eb !important;
             outline-offset: 1px;
         }
 
-        /* Checkbox focus is hidden in inaccessible mode */
         .inaccessible-mode #checkTerms:focus {
             outline: none !important;
             box-shadow: none !important;
@@ -52,14 +51,12 @@
             outline-offset: 2px;
         }
 
-        /* INACCESSIBLE DIALOG: Subtle light blue border flush with button edge */
         .inaccessible-mode .modal-content button:focus {
             outline: 1px solid #93c5fd !important; 
             outline-offset: 0px !important;
-            box-shadow: none !important;
         }
 
-        /* "The Good Way" CSS - WCAG 2.2 Focus Appearance */
+        /* WCAG 2.2 Focus Appearance for Accessible version */
         .accessible-mode *:focus-visible {
             outline: 3px solid #2563eb !important;
             outline-offset: 2px !important;
@@ -67,14 +64,13 @@
             border-radius: 4px;
         }
 
-        /* ACCESSIBLE DIALOG: Blue ring + EXACT 1px INNER WHITE BORDER focus */
         .accessible-mode .modal-content button:focus-visible {
             box-shadow: inset 0 0 0 1px white !important; 
             outline: 3px solid #2563eb !important; 
             outline-offset: 0px !important;
         }
 
-        /* Tooltip Styles */
+        /* Tooltip Box Styles */
         .tooltip-box {
             display: none;
             position: absolute;
@@ -97,20 +93,17 @@
             position: absolute;
             top: 50%;
             right: 100%;
-            top: 50%;
             margin-top: -5px;
             border-width: 5px;
             border-style: solid;
             border-color: transparent #1f2937 transparent transparent;
         }
 
-        /* Tooltip Visibility: Show on mouseover for both versions */
         .info-icon-bad:hover ~ .tooltip-box, 
         .info-icon-good:hover ~ .tooltip-box { 
             display: block; 
         }
         
-        /* Persistent visible class for click trigger (Accessible version) */
         .tooltip-visible { display: block !important; }
         .hidden-forced { display: none !important; }
 
@@ -122,12 +115,12 @@
             left: 0;
             margin-top: 0.5rem;
             background: white;
-            border: 1px solid #6b7280; /* Higher contrast border */
+            border: 1px solid #6b7280;
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             z-index: 40;
             padding: 10px;
             border-radius: 10px;
-            width: 240px;
+            width: 210px;
         }
 
         .calendar-grid {
@@ -152,14 +145,12 @@
             transition: all 0.2s;
         }
 
-        /* Inaccessible Focus: Blue background + white text */
         .inaccessible-mode .calendar-day:focus {
             background-color: #2563eb !important;
             color: white !important;
             outline: none !important;
         }
 
-        /* Accessible Focus: Blue Circle */
         .accessible-mode .calendar-day:focus-visible {
             outline: none !important;
             box-shadow: 0 0 0 2px white, 0 0 0 4px #2563eb !important;
@@ -167,7 +158,7 @@
             z-index: 10;
         }
 
-        /* Modal Styles */
+        /* Modal Overlay */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -186,7 +177,7 @@
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
         }
 
-        /* Toggle switch styling */
+        /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
@@ -200,7 +191,7 @@
         input:checked + .slider { background-color: #15803d; }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        .demo-container { max-width: 1000px; margin: 0 auto; }
+        .demo-container { max-width: 1200px; margin: 0 auto; }
         
         .btn-disabled {
             opacity: 0.4;
@@ -214,17 +205,13 @@
     <div class="demo-container bg-white shadow-2xl rounded-3xl overflow-hidden">
         
         <header class="bg-white border-b border-gray-100">
-            <!-- Empathy Lab Header -->
+            <!-- Empathy Lab Header with Green Title and Banner Logo -->
             <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-50">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 flex-shrink-0">
-                        <!-- Eleven Ways SVG Logo representation -->
-                        <svg viewBox="0 0 100 100" class="w-full h-full">
-                            <circle cx="50" cy="50" r="48" fill="#008a5e" />
-                            <path d="M30 40 L30 70 M40 30 L40 70 M55 70 L75 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h1 id="txt-lab-title" class="text-2xl font-black text-gray-900 tracking-tight leading-tight uppercase">Digital Accessibility Empathy Lab</h1>
+                <div class="flex flex-grow items-center">
+                    <h1 id="txt-lab-title" class="text-xl md:text-2xl font-black tracking-tight leading-tight uppercase" style="color: #008B63;">Digital Accessibility Empathy Lab</h1>
+                </div>
+                <div class="flex-shrink-0">
+                    <img src="https://regine-lambrecht.github.io/color-contrast-checker-size-weight/images/banner.png" alt="Eleven Ways Logo" class="h-12 w-auto object-contain">
                 </div>
             </div>
 
@@ -233,7 +220,6 @@
                 <div class="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200 w-full">
                     <!-- Left Side: Toggle and Checkbox -->
                     <div class="flex items-center gap-4">
-                        <!-- Mode Switcher (WCAG Compliant) -->
                         <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
                             <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
                             <label class="switch">
@@ -250,7 +236,6 @@
                             <span id="accessibleLabel" class="text-xs font-black uppercase tracking-widest text-green-700">Accessible</span>
                         </div>
 
-                        <!-- Issues Toggle (Semantic Label) -->
                         <div class="flex items-center gap-2">
                             <label for="critiqueToggle" id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest cursor-pointer">Show issues</label>
                             <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
@@ -266,9 +251,9 @@
                     </div>
                 </div>
 
-                <!-- Specific Page Title -->
+                <!-- Page title restored to original style -->
                 <div class="w-full pl-2">
-                    <h2 id="txt-title" class="text-lg font-bold text-gray-400 tracking-tight text-left italic">Keyboard experience</h2>
+                    <h2 id="txt-title" class="text-xl font-black text-gray-900 tracking-tight text-left">Keyboard experience</h2>
                 </div>
             </div>
         </header>
@@ -293,7 +278,7 @@
                                         <span class="w-4 h-4 rounded-full bg-blue-700 text-[9px] flex items-center justify-center font-bold text-white">i</span>
                                     </button>
                                     
-                                    <div id="txt-tooltip" class="tooltip-box">Here is a help text</div>
+                                    <div id="txt-tooltip" class="tooltip-box">Help text</div>
                                 </div>
                             </div>
                             <input 
@@ -327,7 +312,6 @@
                                     onfocus="handleBirthFocus(true)"
                                     readonly
                                 >
-                                <!-- Icon Area INSIDE the field -->
                                 <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2">
                                     <span id="calendarIconBad" class="w-6 h-6 flex items-center justify-center text-sm cursor-default">📅</span>
                                     <button 
@@ -375,11 +359,11 @@
                     </div>
                 </div>
 
-                <!-- Sidebar for issues -->
+                <!-- Sidebar expanded for remediation content -->
                 <div class="lg:col-span-3 space-y-6">
-                    <div id="critiquePanel" class="hidden bg-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4 h-full">
+                    <div id="critiquePanel" class="hidden bg-gray-900 text-white p-8 rounded-2xl shadow-xl space-y-6 h-full">
                         <h3 id="txt-critique-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
-                        <div id="critiqueContent" class="text-[11px] space-y-4 opacity-90 leading-relaxed"></div>
+                        <div id="critiqueContent" class="text-sm space-y-6 opacity-95 leading-relaxed"></div>
                     </div>
                 </div>
             </div>
@@ -389,7 +373,7 @@
     <!-- Confirmation Modal -->
     <div id="modalOverlay" class="modal-overlay">
         <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="txt-modal-title">
-            <h2 id="txt-modal-title" class="text-lg font-bold text-gray-900 mb-2">Confirm Terms</h2>
+            <h2 id="txt-modal-title" class="text-lg font-bold text-gray-900 mb-2">Confirm</h2>
             <p id="txt-modal-body" class="text-sm text-gray-600 mb-6">Are you sure you want to accept the terms and conditions?</p>
             <div class="flex gap-3">
                 <button id="btnModalOk" onclick="closeModal(true)" class="flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">Yes</button>
@@ -410,14 +394,13 @@
                 title: "Keyboard experience",
                 nameLabel: "Name Surname",
                 helpIcon: "Help icon",
-                hiddenField: "Hidden field",
                 birth: "Birth Date",
                 format: "Format: dd/mm/yyyy",
                 tooltip: "Here is a help text",
                 termsPrefix: "I accept the",
                 termsLink: "conditions",
-                modalTitle: "Confirm Terms",
-                modalBody: "Are you sure you want to accept the terms and conditions?",
+                modalTitle: "Confirm",
+                modalBody: "Are you sure you want to accept?",
                 modalBtnOk: "Yes",
                 modalBtnNotOk: "No",
                 submit: "Complete Purchase",
@@ -425,27 +408,27 @@
                 showRemediations: "Show remediations",
                 introGood: "Did you notice that the page hasn't visually changed ? Yet the form is now keyboard-friendly. Here is how:",
                 critiqueTitleBad: "What is wrong?",
-                critiqueTitleGood: "Remediations",
+                critiqueTitleGood: "How it was fixed",
                 toastSuccess: "Action Successful!",
                 months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
                 statusInaccessible: "Inaccessible",
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "Name Surname", c: "The form doesn't help you fill in your name. You have to type the whole thing manually every time." },
-                        { f: "Help icon", c: "This information is hidden if you don't use a mouse. Keyboard users can't see this help text." },
-                        { f: "The Void", c: "There is an invisible box between the fields. Your cursor will simply disappear, leaving you lost on the page." },
-                        { f: "Birth Date", c: "Choosing a date takes too long. You have to click through every single day just to reach your year." },
-                        { f: "I accept the conditions", c: "When navigating with a keyboard, it's impossible to tell that this checkbox is selected. There is no highlight." },
-                        { f: "Confirmation Dialog", c: "The popup is disconnected from your keyboard. You can't see which button is selected, and the focus doesn't start in the right place." }
+                        { f: "Name Field", c: "The form doesn't suggest your name. You have to type the whole thing every single time." },
+                        { f: "Help info", c: "This information is hidden unless you use a mouse. Keyboard users cannot see this help text." },
+                        { f: "Empty space", c: "There is an invisible spot between fields where your cursor gets lost, making you lose track of where you are." },
+                        { f: "Calendar", c: "Picking a date takes too long. You have to click many times just to find your birth year." },
+                        { f: "Checkboxes", c: "It's hard to tell when the checkbox is selected with the keyboard. There is no clear highlight around it." },
+                        { f: "Popups", c: "The window opens but doesn't highlight the buttons. You can't see which one is ready to be clicked." }
                     ],
                     good: [
-                        { f: "Name Surname", c: "The browser remembers who you are and suggests your name as soon as you start typing." },
-                        { f: "Help icon", c: "The help text is now easy to open for everyone, whether you use a mouse or a keyboard." },
-                        { f: "Smooth Flow", c: "The invisible obstacle has been removed. Your cursor now moves logically from one field to the next." },
-                        { f: "Birth Date", c: "You can now type your date directly and quickly. No more endless clicking through a calendar." },
-                        { f: "I accept the conditions", c: "The checkbox is now clearly highlighted when you reach it, so you always know exactly where you are." },
-                        { f: "Confirmation Dialog", c: "The selection starts exactly where you need it (on the 'Yes' button) and is clearly visible." }
+                        { f: "Smart suggestions", c: "The browser remembers your name and suggests it automatically as soon as you start typing." },
+                        { f: "Easy help", c: "The help text is now simple to open for everyone, whether using a mouse or a keyboard." },
+                        { f: "Smooth path", c: "The invisible obstacles are gone. Your cursor now moves logically from one field to the next." },
+                        { f: "Quick date", c: "You can now type your date directly and quickly. It is much faster than clicking through a calendar." },
+                        { f: "Clear focus", c: "The checkbox is clearly highlighted when you reach it, so you always know exactly where you are." },
+                        { f: "Ready to click", c: "The selection starts exactly on the 'Yes' button and is clearly visible." }
                     ]
                 }
             },
@@ -453,103 +436,100 @@
                 labTitle: "Labo d'Empathie Accessibilité Numérique",
                 title: "Expérience clavier",
                 nameLabel: "Nom Prénom",
-                helpIcon: "Icône d'aide",
-                hiddenField: "Champ invisible",
+                helpIcon: "Bulle d'aide",
                 birth: "Date de Naissance",
                 format: "Format : jj/mm/aaaa",
                 tooltip: "Ceci est un texte d'aide",
                 termsPrefix: "J'accepte les",
                 termsLink: "conditions",
-                modalTitle: "Confirmer les conditions",
-                modalBody: "Êtes-vous sûr de vouloir accepter les termes et conditions ?",
+                modalTitle: "Confirmer",
+                modalBody: "Voulez-vous accepter ?",
                 modalBtnOk: "Oui",
                 modalBtnNotOk: "Non",
                 submit: "Finaliser l'achat",
                 showIssues: "Afficher les problèmes",
                 showRemediations: "Afficher les corrections",
                 introGood: "Avez-vous remarqué que la page n'a pas changé visuellement ? Pourtant, le formulaire est désormais adapté au clavier. Voici comment :",
-                critiqueTitleBad: "Qu'est-ce qui ne va pas ?",
-                critiqueTitleGood: "Corrections",
-                toastSuccess: "Action réussie!",
+                critiqueTitleBad: "Le problème ?",
+                critiqueTitleGood: "La solution",
+                toastSuccess: "Réussi !",
                 months: ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
                 statusInaccessible: "Inaccessible",
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "Nom Prénom", c: "Le formulaire ne vous aide pas. Vous devez tout taper à la main à chaque fois." },
-                        { f: "Icône d'aide", c: "Cette info est cachée si vous n'utilisez pas de souris. Les utilisateurs clavier ne peuvent pas la voir." },
-                        { f: "Le Vide", c: "Il y a une case invisible entre les champs. Votre curseur disparaît, et vous perdez le fil de la page." },
-                        { f: "Date de Naissance", c: "Choisir une date est trop long. Il faut cliquer sur chaque jour pour arriver à la bonne année." },
-                        { f: "J'accepte les conditions", c: "On ne peut pas savoir que cette case est sélectionnée au clavier. Elle n'est pas mise en avant." },
-                        { f: "Fenêtre de Confirmation", c: "La fenêtre est coupée du clavier. On ne voit pas quel bouton est choisi, et le curseur n'est pas au bon endroit." }
+                        { f: "Champ Nom", c: "Votre nom n'est pas proposé automatiquement. Vous devez tout taper à la main à chaque fois." },
+                        { f: "Bulle d'aide", c: "L'info est cachée si vous n'utilisez pas de souris. Les utilisateurs clavier ne peuvent pas la voir." },
+                        { f: "Le Vide", c: "Il y a une zone invisible entre les cases. Votre curseur s'y perd et vous ne savez plus où vous êtes." },
+                        { f: "Calendrier", c: "Choisir une date est trop long. Il faut cliquer de nombreuses fois pour arriver à l'année." },
+                        { f: "Cases à cocher", c: "On ne voit pas quand la case est sélectionnée au clavier. Elle n'est pas mise en évidence." },
+                        { f: "Fenêtres", c: "La fenêtre s'ouvre mais on ne voit pas quel bouton est prêt à être cliqué." }
                     ],
                     good: [
-                        { f: "Nom Prénom", c: "Le navigateur se souvient de vous et propose votre nom dès les premières lettres." },
-                        { f: "Icône d'aide", c: "Le texte d'aide est désormais facile à ouvrir pour tout le monde, avec ou sans souris." },
-                        { f: "Parcours Fluide", c: "L'obstacle invisible a été supprimé. Le curseur avance logiquement d'un champ à l'autre." },
-                        { f: "Date de Naissance", c: "Vous pouvez taper votre date directement et rapidement sans passer par de multiples clics." },
-                        { f: "J'accepte les conditions", c: "La case est clairement entourée quand vous arrivez dessus, vous savez toujours où vous êtes." },
-                        { f: "Fenêtre de Confirmation", c: "La sélection commence exactement là où il faut (sur le bouton 'Oui') et est bien visible." }
+                        { f: "Suggestions", c: "Le navigateur propose votre nom automatiquement dès les premières lettres." },
+                        { f: "Aide accessible", c: "L'aide est facile à ouvrir pour tout le monde, avec ou sans souris." },
+                        { f: "Parcours direct", c: "L'obstacle invisible est supprimé. Le curseur avance logiquement." },
+                        { f: "Date rapide", c: "Vous pouvez taper votre date directement. C'est bien plus rapide." },
+                        { f: "Indicateur clair", c: "La case est bien entourée quand vous arrivez dessus." },
+                        { f: "Prêt à cliquer", c: "La sélection se place directement sur le bouton 'Oui'." }
                     ]
                 }
             },
             nl: {
-                labTitle: "Digitaal Toegankelijkheid Empathie Lab",
+                labTitle: "Toegankelijkheid Empathie Lab",
                 title: "Toetsenbordervaring",
                 nameLabel: "Naam Voornaam",
                 helpIcon: "Help-icoon",
-                hiddenField: "Verborgen veld",
                 birth: "Geboortedatum",
                 format: "Formaat: dd/mm/jjjj",
                 tooltip: "Hier is een helptekst",
                 termsPrefix: "Ik accepteer de",
                 termsLink: "voorwaarden",
-                modalTitle: "Bevestig voorwaarden",
-                modalBody: "Weet u zeker dat u de voorwaarden wilt accepteren?",
+                modalTitle: "Bevestigen",
+                modalBody: "Wilt u accepteren?",
                 modalBtnOk: "Ja",
                 modalBtnNotOk: "Nee",
-                submit: "Aankoop Voltooien",
+                submit: "Voltooien",
                 showIssues: "Toon problemen",
                 showRemediations: "Toon oplossingen",
                 introGood: "Heb je gemerkt dat de pagina visueel niet is veranderd? Toch is het formulier nu toetsenbordvriendelijk. Hier is hoe:",
                 critiqueTitleBad: "Wat is er mis?",
-                critiqueTitleGood: "Oplossingen",
-                toastSuccess: "Actie geslaagd!",
+                critiqueTitleGood: "Hoe het is opgelost",
+                toastSuccess: "Gelukt!",
                 months: ["Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December"],
-                statusInaccessible: "Inaccessible",
-                statusAccessible: "Accessible",
+                statusInaccessible: "Niet toegankelijk",
+                statusAccessible: "Toegankelijk",
                 critiques: {
                     bad: [
-                        { f: "Naam Voornaam", c: "Het formulier helpt je niet. Je moet alles elke keer opnieuw handmatig typen." },
-                        { f: "Help-icoon", c: "Deze informatie is onzichtbaar zonder muis. Toetsenbordgebruikers kunnen de hulptekst niet zien." },
-                        { f: "Het Gat", c: "Er zit een onzichtbaar vak tussen de velden. Je cursor verdwijnt en je raakt de weg kwijt op de pagina." },
-                        { f: "Geboortedatum", c: "Een datum kiezen duurt te lang. Je moet door elke dag klikken om bij je jaar te komen." },
-                        { f: "Ik accepteer de voorwaarden", c: "Het is onmogelijk om te zien dat dit vakje geselecteerd is. Er is geen markering." },
-                        { f: "Bevestigingsvenster", c: "Het venster reageert niet goed op het toetsenbord. Je ziet niet welke knop gekozen is." }
+                        { f: "Naamveld", c: "Je naam wordt niet voorgesteld. Je moet alles elke keer handmatig typen." },
+                        { f: "Hulpinformatie", c: "Deze info is onzichtbaar zonder muis. Toetsenbordgebruikers zien dit niet." },
+                        { f: "Lege gaten", c: "De cursor verdwijnt op onzichtbare plekken tussen de velden." },
+                        { f: "Kalender", c: "Een datum kiezen duurt te lang door het vele klikken." },
+                        { f: "Vinkjes", c: "Je ziet niet wanneer een vinkje geselecteerd is met het toetsenbord." },
+                        { f: "Vensters", c: "Je ziet niet welke knop actief is in het nieuwe venster." }
                     ],
                     good: [
-                        { f: "Naam Voornaam", c: "De browser onthoudt je naam en stelt deze direct voor zodra je begint te typen." },
-                        { f: "Help-icoon", c: "De hulptekst is nu voor iedereen makkelijk te openen, ook zonder muis." },
-                        { f: "Logische Route", c: "Het onzichtbare obstakel is weg. Je cursor beweegt nu logisch van het ene naar het volgende veld." },
-                        { f: "Geboortedatum", c: "Je kunt de datum nu direct en snel typen. Geen eindeloos geklik meer in een kalender." },
-                        { f: "Ik accepteer de voorwaarden", c: "Het vakje is nu duidelijk gemarkeerd, zodat je altijd weet waar je bent." },
-                        { f: "Bevestigingsvenster", c: "De selectie begint direct op de juiste plek (de 'Ja' knop) en is goed zichtbaar." }
+                        { f: "Slimme suggesties", c: "De browser onthoudt je naam en stelt deze direct voor." },
+                        { f: "Makkelijke hulp", c: "Hulptekst is now voor iedereen makkelijk te openen." },
+                        { f: "Vlotte route", c: "Onzichtbare hindernissen zijn weg. De cursor beweegt logisch." },
+                        { f: "Snel datum", c: "Je kunt de datum nu direct typen. Dat is veel sneller." },
+                        { f: "Duidelijke focus", c: "Het vakje is goed gemarkeerd als je er bent." },
+                        { f: "Klaar om te klikken", c: "De keuze begint direct op de 'Ja' knop." }
                     ]
                 }
             },
             de: {
-                labTitle: "Empathie-Labor für digitale Barrierefreiheit",
+                labTitle: "Barrierefreiheit Empathie-Labor",
                 title: "Tastaturerfahrung",
                 nameLabel: "Vorname Nachname",
                 helpIcon: "Hilfe-Icon",
-                hiddenField: "Verstecktes Feld",
                 birth: "Geburtsdatum",
                 format: "Format: tt/mm/jjjj",
                 tooltip: "Dies ist ein Hilfetext",
                 termsPrefix: "Ich akzeptiere die",
                 termsLink: "Bedingungen",
-                modalTitle: "Bedingungen bestätigen",
-                modalBody: "Sind Sie sicher, dass Sie die Bedingungen akzeptieren möchten?",
+                modalTitle: "Bestätigen",
+                modalBody: "Sind Sie sicher?",
                 modalBtnOk: "Ja",
                 modalBtnNotOk: "Nein",
                 submit: "Kauf abschließen",
@@ -557,35 +537,32 @@
                 showRemediations: "Lösungen anzeigen",
                 introGood: "Haben Sie bemerkt, dass sich die Seite optisch nicht verändert hat? Dennoch ist das Formular nun tastaturfreundlich. Hier ist der Grund:",
                 critiqueTitleBad: "Was ist falsch?",
-                critiqueTitleGood: "Lösungen",
-                toastSuccess: "Aktion erfolgreich!",
+                critiqueTitleGood: "Wie wir es gelöst haben",
+                toastSuccess: "Erfolgreich!",
                 months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
-                statusInaccessible: "Unzugänglich",
+                statusInaccessible: "Nicht zugänglich",
                 statusAccessible: "Zugänglich",
                 critiques: {
                     bad: [
-                        { f: "Vorname Nachname", c: "Das Formular hilft Ihnen nicht. Sie müssen alles jedes Mal manuell eingeben." },
-                        { f: "Hilfe-Icon", c: "Diese Information ist ohne Maus versteckt. Tastaturbenutzer können den Hilfetext nicht sehen." },
-                        { f: "Das Nichts", c: "Es gibt ein unsichtbares Feld zwischen den Eingaben. Ihr Cursor verschwindet einfach." },
-                        { f: "Geburtsdatum", c: "Ein Datum zu wählen dauert zu lange. Man muss sich durch jeden Tag klicken." },
-                        { f: "Ich akzeptiere die Bedingungen", c: "Es ist unmöglich zu erkennen, dass dieses Feld ausgewählt ist. Es gibt keine Markierung." },
-                        { f: "Bestätigungsdialog", c: "Das Fenster ist von der Tastatur getrennt. Man sieht nicht, welcher Knopf gewählt ist." }
+                        { f: "Namensfeld", c: "Das Formular schlägt Ihren Namen nicht vor. Sie müssen alles selbst tippen." },
+                        { f: "Hilfetext", c: "Diese Information ist ohne Maus versteckt. Tastaturnutzer können sie nicht sehen." },
+                        { f: "Leerraum", c: "Der Cursor verschwindet an unsichtbaren Stellen zwischen den Feldern." },
+                        { f: "Kalender", c: "Ein Datum zu wählen dauert zu lange durch das viele Klicken." },
+                        { f: "Häkchen", c: "Man sieht nicht, wenn ein Feld mit der Tastatur gewählt ist." },
+                        { f: "Fenster", c: "Man sieht nicht, welcher Knopf im Fenster gerade aktiv ist." }
                     ],
                     good: [
-                        { f: "Vorname Nachname", c: "Der Browser schlägt Ihren Namen automatisch vor, sobald Sie anfangen zu tippen." },
-                        { f: "Hilfe-Icon", c: "Der Hilfetext ist nun für alle einfach zu öffnen, egal ob mit Maus oder Tastatur." },
-                        { f: "Direkter Weg", c: "Das unsichtbare Hindernis wurde entfernt. Ihr Cursor bewegt sich nun logisch von Feld zu Feld." },
-                        { f: "Geburtsdatum", c: "Sie können Ihr Datum jetzt direkt und schnell eintippen, ohne langes Klicken." },
-                        { f: "Ich akzeptiere die Bedingungen", c: "Das Feld ist nun deutlich markiert, sodass Sie immer wissen, wo Sie sich befinden." },
-                        { f: "Bestätigungsdialog", c: "Die Auswahl startet genau dort, wo Sie sie brauchen (auf dem 'Ja'-Knopf) und ist gut sichtbar." }
+                        { f: "Vorschläge", c: "Der Browser schlägt Ihren Namen automatisch vor." },
+                        { f: "Einfache Hilfe", c: "Hilfetexte sind jetzt für alle leicht zu öffnen." },
+                        { f: "Direkter Weg", c: "Hindernisse sind weg. Der Cursor bewegt sich logisch." },
+                        { f: "Schnelles Datum", c: "Sie können das Datum jetzt direkt eintippen. Das geht viel schneller." },
+                        { f: "Klarer Fokus", c: "Das Feld ist deutlich markiert, wenn Sie es erreichen." },
+                        { f: "Klickbereit", c: "Die Auswahl startet direkt auf dem 'Ja'-Knopf." }
                     ]
                 }
             }
         };
 
-        let currentLang = 'en';
-
-        // Autocomplete suggestions
         function forceAutocomplete(input) {
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
@@ -596,15 +573,12 @@
         function handleDateInput(e) {
             let val = e.target.value.replace(/\D/g, ''); 
             if (val.length > 8) val = val.substring(0, 8);
-            
             let finalVal = '';
             if (val.length > 0) {
                 finalVal += val.substring(0, 2);
                 if (val.length > 2) {
                     finalVal += '/' + val.substring(2, 4);
-                    if (val.length > 4) {
-                        finalVal += '/' + val.substring(4, 8);
-                    }
+                    if (val.length > 4) finalVal += '/' + val.substring(4, 8);
                 }
             }
             e.target.value = finalVal;
@@ -653,18 +627,13 @@
             document.getElementById('txt-toggle-critique').innerText = isAccessible ? t.showRemediations : t.showIssues;
             document.getElementById('txt-critique-title').innerText = isAccessible ? t.critiqueTitleGood : t.critiqueTitleBad;
 
-            let html = '';
-            if (isAccessible) {
-                html += `<p class="mb-6 font-bold text-blue-200 italic border-b border-gray-700 pb-4">${t.introGood}</p>`;
-            }
-            
+            let html = isAccessible ? `<p class="mb-6 font-bold text-blue-200 italic border-b border-gray-700 pb-4">${t.introGood}</p>` : '';
             html += data.map(item => `
-                <div class="mb-4">
-                    <span class="text-blue-400 font-bold block mb-1 uppercase text-[10px] tracking-tight">${item.f}</span>
-                    <p class="text-white">${item.c}</p>
+                <div class="mb-6">
+                    <span class="text-blue-400 font-bold block mb-1 uppercase text-[11px] tracking-tight">${item.f}</span>
+                    <p class="text-white text-sm">${item.c}</p>
                 </div>
             `).join('');
-            
             panel.innerHTML = html;
         }
 
@@ -674,26 +643,18 @@
 
         function toggleTooltip() {
             if (document.getElementById('modeToggle').checked) {
-                const tt = document.getElementById('txt-tooltip');
-                tt.classList.toggle('tooltip-visible');
-                tt.classList.remove('hidden-forced');
+                document.getElementById('txt-tooltip').classList.toggle('tooltip-visible');
             }
         }
-
+        
         function hideTooltip() {
-            const tt = document.getElementById('txt-tooltip');
-            tt.classList.remove('tooltip-visible');
+            document.getElementById('txt-tooltip').classList.remove('tooltip-visible');
         }
 
         function handleTermsToggle() {
-            const checkbox = document.getElementById('checkTerms');
-            if (checkbox.checked) {
-                const modal = document.getElementById('modalOverlay');
-                const isAccessible = document.getElementById('modeToggle').checked;
-                modal.style.display = 'flex';
-                if (isAccessible) {
-                    document.getElementById('btnModalOk').focus();
-                }
+            if (document.getElementById('checkTerms').checked) {
+                document.getElementById('modalOverlay').style.display = 'flex';
+                if (document.getElementById('modeToggle').checked) document.getElementById('btnModalOk').focus();
             } else {
                 isConfirmed = false;
                 updateSubmitState();
@@ -701,93 +662,74 @@
         }
 
         function closeModal(confirmed) {
-            const modal = document.getElementById('modalOverlay');
-            const isAccessible = document.getElementById('modeToggle').checked;
-            modal.style.display = 'none';
-            if (confirmed) {
-                isConfirmed = true;
-            } else {
-                isConfirmed = false;
-                document.getElementById('checkTerms').checked = false;
-            }
+            document.getElementById('modalOverlay').style.display = 'none';
+            if (confirmed) isConfirmed = true; 
+            else { isConfirmed = false; document.getElementById('checkTerms').checked = false; }
             updateSubmitState();
-            if (isAccessible) {
-                document.getElementById('checkTerms').focus();
-            }
+            if (document.getElementById('modeToggle').checked) document.getElementById('checkTerms').focus();
         }
 
         function updateSubmitState() {
-            const badBtn = document.getElementById('txt-btn-bad');
-            const goodBtn = document.getElementById('txt-btn-good');
+            const bad = document.getElementById('txt-btn-bad');
+            const good = document.getElementById('txt-btn-good');
             if (isConfirmed) {
-                badBtn.classList.remove('btn-disabled');
-                goodBtn.classList.remove('btn-disabled');
-                goodBtn.removeAttribute('disabled');
+                bad.classList.remove('btn-disabled');
+                good.classList.remove('btn-disabled');
+                good.removeAttribute('disabled');
             } else {
-                badBtn.classList.add('btn-disabled');
-                goodBtn.classList.add('btn-disabled');
-                goodBtn.setAttribute('disabled', 'true');
+                bad.classList.add('btn-disabled');
+                good.classList.add('btn-disabled');
+                good.setAttribute('disabled', 'true');
             }
         }
 
         function toggleMode() {
             const modeToggle = document.getElementById('modeToggle');
             const isAccessible = modeToggle.checked;
-            const bodyTag = document.getElementById('bodyTag');
-            const calContainer = document.getElementById('calendarContainer');
-            
             modeToggle.setAttribute('aria-checked', isAccessible);
-            calContainer.style.display = 'none';
+            document.getElementById('calendarContainer').style.display = 'none';
             document.getElementById('inputEmail').value = '';
             document.getElementById('inputBirth').value = '';
             document.getElementById('checkTerms').checked = false;
             isConfirmed = false;
             updateSubmitState();
-
             renderCalendar(isAccessible);
-            const inputBirth = document.getElementById('inputBirth');
-            const inputEmail = document.getElementById('inputEmail');
-            const theVoid = document.getElementById('theVoid');
             
-            document.getElementById('txt-tooltip').classList.remove('tooltip-visible', 'hidden-forced');
-
             if (isAccessible) {
-                bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 accessible-mode";
-                inputBirth.removeAttribute('readonly');
-                inputBirth.oninput = handleDateInput;
+                document.getElementById('bodyTag').className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 accessible-mode";
+                document.getElementById('inputBirth').removeAttribute('readonly');
+                document.getElementById('inputBirth').oninput = handleDateInput;
                 document.getElementById('calendarToggleBtn').classList.remove('hidden');
-                document.getElementById('calendarIconBad').classList.add('hidden');
-                inputEmail.setAttribute('autocomplete', 'name');
-                inputEmail.setAttribute('list', 'email-list');
                 document.getElementById('emailIconBad').classList.add('hidden');
                 document.getElementById('emailIconGood').classList.remove('hidden');
                 document.getElementById('submitBad').classList.add('hidden');
                 document.getElementById('submitGood').classList.remove('hidden');
-                theVoid.style.display = 'none';
+                document.getElementById('inputEmail').setAttribute('autocomplete', 'name');
+                document.getElementById('inputEmail').setAttribute('list', 'email-list');
+                document.getElementById('theVoid').style.display = 'none';
             } else {
-                bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode";
-                inputBirth.setAttribute('readonly', true);
-                inputBirth.oninput = null;
+                document.getElementById('bodyTag').className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode";
+                document.getElementById('inputBirth').setAttribute('readonly', true);
+                document.getElementById('inputBirth').oninput = null;
                 document.getElementById('calendarToggleBtn').classList.add('hidden');
-                document.getElementById('calendarIconBad').classList.remove('hidden');
-                inputEmail.setAttribute('autocomplete', 'off');
-                inputEmail.removeAttribute('list');
                 document.getElementById('emailIconBad').classList.remove('hidden');
                 document.getElementById('emailIconGood').classList.add('hidden');
                 document.getElementById('submitBad').classList.remove('hidden');
                 document.getElementById('submitGood').classList.add('hidden');
-                theVoid.style.display = 'block';
+                document.getElementById('inputEmail').setAttribute('autocomplete', 'off');
+                document.getElementById('inputEmail').removeAttribute('list');
+                document.getElementById('theVoid').style.display = 'block';
             }
             updateModeLabels();
         }
 
         function populateYears() {
-            const yearSelect = document.getElementById('yearSelect');
-            yearSelect.innerHTML = '';
+            const ys = document.getElementById('yearSelect');
+            ys.innerHTML = '';
             for (let yr = 2026; yr >= 1970; yr--) {
                 const opt = document.createElement('option');
                 opt.value = yr; opt.textContent = yr;
-                yearSelect.appendChild(opt);
+                ys.appendChild(opt);
             }
         }
 
@@ -795,19 +737,13 @@
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
             const today = 11;
-
             for (let i = 1; i <= 28; i++) {
                 const dayStr = i.toString().padStart(2, '0');
                 const isToday = i === today;
-                
                 const d = document.createElement('div');
                 d.className = "calendar-day";
                 d.innerText = i;
-                
-                if (isToday) {
-                    d.classList.add('bg-blue-600', 'text-white');
-                }
-
+                if (isToday) d.classList.add('bg-blue-600', 'text-white');
                 if (isAccessible) {
                     d.setAttribute('tabindex', '0');
                     d.onclick = () => selectDate(dayStr);
@@ -819,8 +755,7 @@
                     b.innerText = i;
                     if (isToday) b.classList.add('bg-blue-600', 'text-white');
                     b.onclick = () => selectDate(dayStr);
-                    d.innerHTML = '';
-                    d.appendChild(b);
+                    d.innerHTML = ''; d.appendChild(b);
                 }
                 grid.appendChild(d);
             }
@@ -835,23 +770,16 @@
         }
 
         function handleBirthFocus(isFocused) {
-            if (isFocused && !document.getElementById('modeToggle').checked) {
-                openCalendar();
-            }
+            if (isFocused && !document.getElementById('modeToggle').checked) openCalendar();
         }
 
         function toggleCalendarManual() {
-            const c = document.getElementById('calendarContainer');
-            if (c.style.display === 'block') {
-                c.style.display = 'none';
-            } else {
-                openCalendar();
-            }
+            if (document.getElementById('calendarContainer').style.display === 'block') document.getElementById('calendarContainer').style.display = 'none';
+            else openCalendar();
         }
 
         function openCalendar() {
-            const c = document.getElementById('calendarContainer');
-            c.style.display = 'block';
+            document.getElementById('calendarContainer').style.display = 'block';
             document.getElementById('monthSelect').focus();
         }
 
@@ -859,29 +787,19 @@
             if (e.key === 'Escape') {
                 document.getElementById('calendarContainer').style.display = 'none';
                 if(document.getElementById('modalOverlay').style.display === 'flex') closeModal(false);
-                if (document.getElementById('modeToggle').checked) {
-                    document.querySelectorAll('.tooltip-box').forEach(t => t.classList.add('hidden-forced'));
-                }
+                hideTooltip();
             }
         });
 
         document.addEventListener('focusin', (e) => {
             if (document.getElementById('modeToggle').checked) {
-                const birthArea = document.getElementById('birthFieldWrapper');
-                const calendarArea = document.getElementById('calendarContainer');
-                if (birthArea && !birthArea.contains(e.target) && calendarArea && !calendarArea.contains(e.target)) {
+                const wrapper = document.getElementById('birthFieldWrapper');
+                const container = document.getElementById('calendarContainer');
+                if (wrapper && !wrapper.contains(e.target) && container && !container.contains(e.target)) {
                     document.getElementById('calendarContainer').style.display = 'none';
                 }
             }
         });
-
-        function showMessage(msg) {
-            if (!isConfirmed) return;
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.style.opacity = '1';
-            setTimeout(() => toast.style.opacity = '0', 3000);
-        }
 
         populateYears();
         setLanguage('en');
