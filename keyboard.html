@@ -22,7 +22,6 @@
         }
 
         /* --- PERSISTENT KEYBOARD ACCESSIBILITY FOR LAB CONTROLS --- */
-        /* Always show focus on Header controls so the user can operate the lab itself */
         .lang-btn:focus-visible, 
         #critiqueToggle:focus-visible {
             outline: 2px solid #2563eb !important;
@@ -30,27 +29,24 @@
             border-radius: 4px;
         }
 
-        /* Focus indicator for the main mode toggle switch */
         .switch input:focus-visible + .slider {
             outline: 2px solid #2563eb;
             outline-offset: 4px;
             box-shadow: 0 0 0 2px white;
         }
-        /* ---------------------------------------------------------- */
 
-        /* Specific Exception: Always show focus on Month/Year in Calendar as requested previously */
+        /* Always show focus on Month/Year in Calendar */
         #monthSelect:focus, #yearSelect:focus {
             outline: 2px solid #2563eb !important;
             outline-offset: 1px;
         }
 
-        /* Checkbox focus is always hidden in inaccessible mode */
+        /* Checkbox focus is hidden in inaccessible mode */
         .inaccessible-mode #checkTerms:focus {
             outline: none !important;
             box-shadow: none !important;
         }
         
-        /* Show focus on the checkbox in accessible version */
         .accessible-mode #checkTerms:focus-visible {
             outline: 2px solid #2563eb !important;
             outline-offset: 2px;
@@ -63,7 +59,7 @@
             box-shadow: none !important;
         }
 
-        /* "The Good Way" CSS - WCAG 2.2 Focus Appearance for general elements */
+        /* "The Good Way" CSS - WCAG 2.2 Focus Appearance */
         .accessible-mode *:focus-visible {
             outline: 3px solid #2563eb !important;
             outline-offset: 2px !important;
@@ -108,14 +104,13 @@
             border-color: transparent #1f2937 transparent transparent;
         }
 
-        /* Tooltip Visibility: Hover or Focus */
+        /* Tooltip Visibility: Show on mouseover for both versions */
         .info-icon-bad:hover ~ .tooltip-box, 
-        .info-icon-bad:focus ~ .tooltip-box,
-        .info-icon-good:hover ~ .tooltip-box, 
-        .info-icon-good:focus ~ .tooltip-box { 
+        .info-icon-good:hover ~ .tooltip-box { 
             display: block; 
         }
         
+        /* Persistent visible class for click trigger (Accessible version) */
         .tooltip-visible { display: block !important; }
         .hidden-forced { display: none !important; }
 
@@ -127,7 +122,7 @@
             left: 0;
             margin-top: 0.5rem;
             background: white;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #6b7280; /* Higher contrast border */
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             z-index: 40;
             padding: 10px;
@@ -151,7 +146,7 @@
             border-radius: 2px;
         }
 
-        /* Modal / Dialog Styles */
+        /* Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -170,7 +165,7 @@
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
         }
 
-        /* Custom Toggle Switch */
+        /* Toggle switch styling */
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
@@ -213,13 +208,13 @@
                     <span class="text-xs font-black uppercase tracking-widest text-green-700" id="accessibleLabel">Accessible</span>
                 </div>
 
-                <!-- Error Toggle (Keep Keyboard Accessible) -->
+                <!-- Issues Toggle -->
                 <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
-                    <span id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Show errors</span>
+                    <span id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Show issues</span>
                     <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
                 </div>
 
-                <!-- Language Switcher (Keep Keyboard Accessible) -->
+                <!-- Language Switcher -->
                 <div class="flex gap-2 text-[10px] font-bold">
                     <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
                     <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
@@ -235,23 +230,30 @@
                 <div class="space-y-6">
                     <div class="space-y-6">
                         
-                        <!-- Email Field (Wider) -->
-                        <div class="flex flex-col max-w-md">
+                        <!-- Email Field -->
+                        <div class="flex flex-col w-48">
                             <div class="flex items-center gap-2 mb-1">
                                 <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">E-mail Address</label>
                                 <div class="relative flex items-center">
-                                    <span id="emailIconBad" class="info-icon-bad w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white" tabindex="0">i</span>
-                                    <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white hover:bg-blue-800" aria-label="E-mail information">i</button>
+                                    <!-- Inaccessible Hit area (24x24) with smaller visual icon (16x16) -->
+                                    <span id="emailIconBad" class="info-icon-bad w-6 h-6 flex items-center justify-center cursor-help" tabindex="0">
+                                        <span class="w-4 h-4 rounded-full bg-blue-700 text-[9px] flex items-center justify-center font-bold text-white">i</span>
+                                    </span>
+                                    
+                                    <!-- Accessible Hit area (24x24) with smaller visual icon (16x16) -->
+                                    <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-6 h-6 flex items-center justify-center cursor-help hover:opacity-80" aria-label="E-mail information">
+                                        <span class="w-4 h-4 rounded-full bg-blue-700 text-[9px] flex items-center justify-center font-bold text-white">i</span>
+                                    </button>
+                                    
                                     <div id="txt-tooltip" class="tooltip-box">Here is a help text</div>
                                 </div>
                             </div>
                             <input 
                                 type="email" 
                                 id="inputEmail" 
-                                class="border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm w-full" 
+                                class="border border-gray-500 p-2 rounded-lg bg-gray-50 text-sm w-full" 
                                 placeholder=""
                                 autocomplete="off"
-                                list="email-list"
                                 oninput="forceAutocomplete(this)"
                             >
                             <datalist id="email-list">
@@ -259,39 +261,44 @@
                             </datalist>
                         </div>
 
-                        <!-- Hidden field "The Void" -->
+                        <!-- Hidden field "The Void" placed before Birth Date -->
                         <div class="relative">
                             <input type="text" id="theVoid" class="absolute opacity-0 pointer-events-none" style="width:1px; height:1px;">
                         </div>
 
-                        <!-- Birth Date (Narrower) -->
+                        <!-- Birth Date -->
                         <div class="flex flex-col relative w-48">
                             <label for="inputBirth" id="txt-label-birth" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Birth Date</label>
-                            <span class="text-[9px] text-gray-500 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
-                            <div class="flex gap-2">
+                            <span class="text-[9px] text-gray-600 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
+                            <div class="relative flex items-center">
                                 <input 
                                     type="text" 
                                     id="inputBirth" 
-                                    class="flex-grow border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
+                                    class="w-full border border-gray-500 p-2 pr-10 rounded-lg bg-gray-50 text-sm" 
                                     value=""
                                     onfocus="handleBirthFocus(true)"
                                     readonly
                                 >
-                                <button 
-                                    type="button" 
-                                    id="calendarToggleBtn" 
-                                    class="hidden bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg border border-gray-300 transition-colors text-sm"
-                                    aria-label="Open calendar"
-                                    onclick="toggleCalendarManual()"
-                                >
-                                    📅
-                                </button>
+                                <!-- Icon Area INSIDE the field, target size 24x24px -->
+                                <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2">
+                                    <span id="calendarIconBad" class="w-6 h-6 flex items-center justify-center text-sm cursor-default">📅</span>
+                                    <button 
+                                        type="button" 
+                                        id="calendarToggleBtn" 
+                                        class="hidden w-6 h-6 flex items-center justify-center hover:opacity-70 transition-opacity text-sm focus:outline-none"
+                                        aria-label="Open calendar"
+                                        onclick="toggleCalendarManual()"
+                                    >
+                                        📅
+                                    </button>
+                                </div>
                             </div>
                             
+                            <!-- Calendar Popup -->
                             <div id="calendarContainer" class="calendar-popup">
                                 <div class="flex gap-2 mb-2">
-                                    <select id="monthSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
-                                    <select id="yearSelect" class="text-[10px] border p-1 rounded bg-white w-1/2"></select>
+                                    <select id="monthSelect" class="text-[10px] border border-gray-500 p-1 rounded bg-white w-1/2"></select>
+                                    <select id="yearSelect" class="text-[10px] border border-gray-500 p-1 rounded bg-white w-1/2"></select>
                                 </div>
                                 <div class="calendar-grid" id="calendarGrid"></div>
                             </div>
@@ -307,7 +314,7 @@
                         </div>
                     </div>
 
-                    <div class="pt-4 max-w-md">
+                    <div class="pt-4 w-48">
                         <div id="submitBad">
                             <div id="txt-btn-bad" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-center cursor-pointer shadow transition-colors text-sm btn-disabled" onclick="showMessage('Purchase Complete!')">
                                 Complete Purchase
@@ -366,8 +373,9 @@
                 modalBtnOk: "Yes",
                 modalBtnNotOk: "No",
                 submit: "Complete Purchase",
-                showErrors: "Show errors",
+                showIssues: "Show issues",
                 showRemediations: "Show remediations",
+                introGood: "Did you notice that the page hasn't visually changed ? Yet the form is now keyboard-friendly. Here is how:",
                 critiqueTitleBad: "What is wrong?",
                 critiqueTitleGood: "Remediations",
                 toastSuccess: "Action Successful!",
@@ -377,7 +385,7 @@
                 critiques: {
                     bad: [
                         { f: "E-mail Address", c: "The form doesn't help you fill in your address. You have to type the whole thing manually every time." },
-                        { f: "Help icon", c: "The help text only appears on hover. For keyboard users, this information is completely hidden as it can't be focused." },
+                        { f: "Help icon", c: "The help text only appears on mouseover. For keyboard users, this information is completely hidden." },
                         { f: "Hidden field", c: "There is an invisible box between the e-mail and the date field. If you tab into it, you'll lose track of where you are on the page." },
                         { f: "Birth Date", c: "Selecting a date is exhausting. You have to press the 'Tab' key dozens of times to move through every single day." },
                         { f: "I accept the conditions", c: "When you move through the page using your keyboard, this checkbox doesn't light up. You can't see where you are." },
@@ -385,9 +393,9 @@
                     ],
                     good: [
                         { f: "E-mail Address", c: "The browser automatically suggests your email address so you don't have to type it out manually." },
-                        { f: "Help icon", c: "The icon is now focusable. When you reach it with your keyboard or mouse, the message appears clearly." },
+                        { f: "Help icon", c: "The information now appears on mouseover and click. We removed the focus trigger to avoid cluttering the keyboard flow." },
                         { f: "Hidden field", c: "This unnecessary stop has been removed, ensuring a direct and logical path through the form." },
-                        { f: "Birth Date", c: "Manual typing is improved with an automatic mask that handles the '/' separators for you." },
+                        { f: "Birth Date", c: "The calendar button is now integrated into the field and focusable, and manual typing is improved with an automatic mask." },
                         { f: "I accept the conditions", c: "The checkbox now shows a clear focus ring, helping you identify exactly where you are while navigating." },
                         { f: "Confirmation Dialog", c: "Your keyboard focus jumps directly to the 'Yes' button so you can press it instantly, with a clear 1px inner white border as focus." }
                     ]
@@ -403,14 +411,14 @@
                 tooltip: "Ceci est un texte d'aide",
                 termsPrefix: "J'accepte les",
                 termsLink: "conditions",
-                hiddenField: "Champ invisible",
                 modalTitle: "Confirmer les conditions",
                 modalBody: "Êtes-vous sûr de vouloir accepter les termes et conditions ?",
                 modalBtnOk: "Oui",
                 modalBtnNotOk: "Non",
                 submit: "Finaliser l'achat",
-                showErrors: "Afficher les erreurs",
+                showIssues: "Afficher les problèmes",
                 showRemediations: "Afficher les corrections",
+                introGood: "Avez-vous remarqué que la page n'a pas changé visuellement ? Pourtant, le formulaire est désormais adapté au clavier. Voici comment :",
                 critiqueTitleBad: "Qu'est-ce qui ne va pas ?",
                 critiqueTitleGood: "Corrections",
                 toastSuccess: "Action réussie!",
@@ -420,7 +428,7 @@
                 critiques: {
                     bad: [
                         { f: "Adresse E-mail", c: "Le formulaire ne vous aide pas à remplir votre adresse. Vous devez tout taper manuellement." },
-                        { f: "Icône d'aide", c: "Le texte d'aide ne s'affiche qu'au survol. Pour les utilisateurs du clavier, cette info est inaccessible." },
+                        { f: "Icône d'aide", c: "Le texte d'aide ne s'affiche qu'au survol de la souris. Pour les utilisateurs du clavier, cette info est inaccessible." },
                         { f: "Champ invisible", c: "Il y a une case invisible entre l'e-mail et la date. Vous perdrez le fil de votre navigation si vous tombez dessus." },
                         { f: "Date de Naissance", c: "Choisir une date est épuisant. Vous devez appuyer sur 'Tab' des dizaines de fois." },
                         { f: "J'accepte les conditions", c: "Quand vous naviguez au clavier, cette case ne s'entoure pas de couleur. On ne sait pas où l'on est." },
@@ -428,7 +436,7 @@
                     ],
                     good: [
                         { f: "Adresse E-mail", c: "Le navigateur propose automatiquement votre e-mail pour vous faire gagner du temps." },
-                        { f: "Icône d'aide", c: "L'icône est maintenant focalisable. Au clavier ou à la souris, le message s'affiche clairement." },
+                        { f: "Icône d'aide", c: "L'info s'affiche au survol et au clic. Nous avons retiré le déclencheur au focus pour ne pas encombrer le flux clavier." },
                         { f: "Champ invisible", c: "Cet arrêt inutile a été supprimé pour garantir un parcours fluide dans le formulaire." },
                         { f: "Date de Naissance", c: "La saisie est simplifiée par un masque automatique qui gère les '/' pour vous." },
                         { f: "J'accepte les conditions", c: "La case affiche désormais un contour de focus clair pour guider la navigation clavier." },
@@ -446,14 +454,14 @@
                 tooltip: "Hier is een helptekst",
                 termsPrefix: "Ik accepteer de",
                 termsLink: "voorwaarden",
-                hiddenField: "Verborgen veld",
                 modalTitle: "Bevestig voorwaarden",
                 modalBody: "Weet u zeker dat u de voorwaarden wilt accepteren?",
                 modalBtnOk: "Ja",
                 modalBtnNotOk: "Nee",
                 submit: "Aankoop Voltooien",
-                showErrors: "Toon fouten",
+                showIssues: "Toon problemen",
                 showRemediations: "Toon oplossingen",
+                introGood: "Heb je gemerkt dat de pagina visueel niet is veranderd? Toch is het formulier nu toetsenbordvriendelijk. Hier is hoe:",
                 critiqueTitleBad: "Wat is er mis?",
                 critiqueTitleGood: "Oplossingen",
                 toastSuccess: "Actie geslaagd!",
@@ -463,7 +471,7 @@
                 critiques: {
                     bad: [
                         { f: "E-mailadres", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
-                        { f: "Help-icoon", c: "De helptekst verschijnt alleen bij muisover. Toetsenbordgebruikers kunnen deze informatie niet zien." },
+                        { f: "Help-icoon", c: "De helptekst verschijnt alleen bij mouseover. Toetsenbordgebruikers kunnen deze informatie niet zien." },
                         { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de e-mail en de datum. Je raakt de weg kwijt op de pagina." },
                         { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
                         { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
@@ -471,9 +479,9 @@
                     ],
                     good: [
                         { f: "E-mailadres", c: "De browser stelt je e-mailadres automatisch voor bij elke letter." },
-                        { f: "Help-icoon", c: "Het icoon is nu focusbaar. Bij toetsenbord- of muisgebruik verschijnt het bericht duidelijk." },
-                        { f: "Verborgen veld", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
-                        { f: "Geboortedatum", c: "Handmatige invoer is verbeterd met een masker dat automatisch de '/' toevoegt." },
+                        { f: "Help-icoon", c: "Informatie verschijnt bij mouseover en klik. We hebben de focus-trigger verwijderd voor een rustiger keyboard-traject." },
+                        { f: "Hidden field", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
+                        { f: "Geboortedatum", c: "De kalenderknop is nu geïntegreerd in het veld en focusbaar, en invoer is verbeterd met een masker." },
                         { f: "Ik accepteer de voorwaarden", c: "De checkbox toont nu een duidelijke focusrand." },
                         { f: "Bevestigingsvenster", c: "Je focus springt direct naar de 'Ja' knop, met een duidelijke 1px witte binnenrand." }
                     ]
@@ -544,16 +552,24 @@
         function updateModeLabels() {
             const isAccessible = document.getElementById('modeToggle').checked;
             const t = translations[currentLang];
-            document.getElementById('txt-toggle-critique').innerText = isAccessible ? t.showRemediations : t.showErrors;
+            document.getElementById('txt-toggle-critique').innerText = isAccessible ? t.showRemediations : t.showIssues;
             document.getElementById('txt-critique-title').innerText = isAccessible ? t.critiqueTitleGood : t.critiqueTitleBad;
             const panel = document.getElementById('critiqueContent');
             const data = isAccessible ? t.critiques.good : t.critiques.bad;
-            panel.innerHTML = data.map(item => `
+            
+            let html = '';
+            if (isAccessible) {
+                html += `<p class="mb-6 font-bold text-blue-200 italic border-b border-gray-700 pb-4">${t.introGood}</p>`;
+            }
+            
+            html += data.map(item => `
                 <div class="mb-4">
                     <span class="text-blue-400 font-bold block mb-1 uppercase text-[10px] tracking-tight">${item.f}</span>
                     <p class="text-white">${item.c}</p>
                 </div>
             `).join('');
+            
+            panel.innerHTML = html;
         }
 
         function toggleCritiquePanel() {
@@ -625,6 +641,7 @@
 
             renderCalendar(isAccessible);
             const inputBirth = document.getElementById('inputBirth');
+            const inputEmail = document.getElementById('inputEmail');
             const theVoid = document.getElementById('theVoid');
             
             document.getElementById('txt-tooltip').classList.remove('tooltip-visible', 'hidden-forced');
@@ -634,7 +651,9 @@
                 inputBirth.removeAttribute('readonly');
                 inputBirth.oninput = handleDateInput;
                 document.getElementById('calendarToggleBtn').classList.remove('hidden');
-                document.getElementById('inputEmail').setAttribute('autocomplete', 'email');
+                document.getElementById('calendarIconBad').classList.add('hidden');
+                inputEmail.setAttribute('autocomplete', 'email');
+                inputEmail.setAttribute('list', 'email-list');
                 document.getElementById('emailIconBad').classList.add('hidden');
                 document.getElementById('emailIconGood').classList.remove('hidden');
                 document.getElementById('submitBad').classList.add('hidden');
@@ -646,8 +665,10 @@
                 inputBirth.setAttribute('readonly', true);
                 inputBirth.oninput = null;
                 document.getElementById('calendarToggleBtn').classList.add('hidden');
+                document.getElementById('calendarIconBad').classList.remove('hidden');
                 document.getElementById('calendarContainer').style.display = 'none';
-                document.getElementById('inputEmail').setAttribute('autocomplete', 'off');
+                inputEmail.setAttribute('autocomplete', 'off');
+                inputEmail.removeAttribute('list');
                 document.getElementById('emailIconBad').classList.remove('hidden');
                 document.getElementById('emailIconGood').classList.add('hidden');
                 document.getElementById('submitBad').classList.remove('hidden');
@@ -727,7 +748,7 @@
 
         document.addEventListener('focusin', (e) => {
             if (document.getElementById('modeToggle').checked) {
-                const birthArea = document.getElementById('inputBirth').parentElement.parentElement;
+                const birthArea = document.getElementById('inputBirth').parentElement;
                 if (birthArea && !birthArea.contains(e.target)) document.getElementById('calendarContainer').style.display = 'none';
             }
         });
