@@ -122,7 +122,7 @@
             left: 0;
             margin-top: 0.5rem;
             background: white;
-            border: 1px solid #6b7280;
+            border: 1px solid #6b7280; /* Higher contrast border */
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             z-index: 40;
             padding: 10px;
@@ -213,40 +213,46 @@
 
     <div class="demo-container bg-white shadow-2xl rounded-3xl overflow-hidden">
         
-        <header class="p-4 md:p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-white sticky top-0 z-50">
-            <div>
-                <h1 id="txt-title" class="text-xl font-black text-gray-900 tracking-tight">Keyboard experience</h1>
-            </div>
-            
-            <div class="flex flex-wrap items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200">
-                <!-- Mode Switchers -->
-                <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
-                    <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
-                    <label class="switch">
-                        <input type="checkbox" id="modeToggle" onchange="toggleMode()">
-                        <span class="slider"></span>
-                    </label>
-                    <span class="text-xs font-black uppercase tracking-widest text-green-700" id="accessibleLabel">Accessible</span>
+        <header class="p-4 md:p-6 border-b border-gray-100 flex flex-col gap-4 bg-white sticky top-0 z-50">
+            <!-- Tools bar at the top -->
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200 w-full">
+                <!-- Left Side: Toggle and Checkbox -->
+                <div class="flex items-center gap-4">
+                    <!-- Mode Switchers -->
+                    <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
+                        <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
+                        <label class="switch">
+                            <input type="checkbox" id="modeToggle" onchange="toggleMode()">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="text-xs font-black uppercase tracking-widest text-green-700" id="accessibleLabel">Accessible</span>
+                    </div>
+
+                    <!-- Issues Toggle -->
+                    <div class="flex items-center gap-2">
+                        <span id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Show issues</span>
+                        <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
+                    </div>
                 </div>
 
-                <!-- Issues Toggle -->
-                <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
-                    <span id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Show issues</span>
-                    <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
-                </div>
-
-                <!-- Language Switcher -->
+                <!-- Right Side: Language Switcher -->
                 <div class="flex gap-2 text-[10px] font-bold">
                     <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
                     <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
                     <button onclick="setLanguage('nl')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-nl">NL</button>
+                    <button onclick="setLanguage('de')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-de">DE</button>
                 </div>
+            </div>
+
+            <!-- Page Title below the tools bar -->
+            <div class="w-full">
+                <h1 id="txt-title" class="text-xl font-black text-gray-900 tracking-tight text-left">Keyboard experience</h1>
             </div>
         </header>
 
         <main id="mainContent" class="p-6 md:p-10">
             
-            <!-- Grid rebalanced: 1/4 for form, 3/4 for sidebar/issues -->
+            <!-- Grid balanced: 1/4 for form, 3/4 for issues panel -->
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 
                 <div class="lg:col-span-1 space-y-6">
@@ -344,7 +350,7 @@
                     </div>
                 </div>
 
-                <!-- Sidebar expanded to 3/4 -->
+                <!-- Sidebar for issues expanded to 3/4 -->
                 <div class="lg:col-span-3 space-y-6">
                     <div id="critiquePanel" class="hidden bg-gray-900 text-white p-6 rounded-2xl shadow-xl space-y-4 h-full">
                         <h3 id="txt-critique-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
@@ -486,11 +492,11 @@
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "Naam Voornaam", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
+                        { f: "Naam Voornaam", c: "Het formulier helpt je nicht beim Ausfüllen Ihres Namens. Sie müssen alles jedes Mal manuell eingeben." },
                         { f: "Help-icoon", c: "De helptekst verschijnt alleen bij mouseover. Toetsenbordgebruikers kunnen deze informatie niet zien." },
                         { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de naam en de datum. Je raakt de weg kwijt op de pagina." },
                         { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
-                        { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
+                        { f: "Ik accepteer de voorwaarden", c: "Wanneer je mit dem toetsenbord navigeert, zie je geen kader om deze checkbox." },
                         { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
                     ],
                     good: [
@@ -502,11 +508,55 @@
                         { f: "Bevestigingsvenster", c: "Je focus springt direct naar de 'Ja' knop, met een duidelijke 1px witte binnenrand." }
                     ]
                 }
+            },
+            de: {
+                title: "Tastaturerfahrung",
+                nameLabel: "Vorname Nachname",
+                helpIcon: "Hilfe-Icon",
+                hiddenField: "Verstecktes Feld",
+                birth: "Geburtsdatum",
+                format: "Format: tt/mm/jjjj",
+                tooltip: "Dies ist ein Hilfetext",
+                termsPrefix: "Ich akzeptiere die",
+                termsLink: "Bedingungen",
+                modalTitle: "Bedingungen bestätigen",
+                modalBody: "Sind Sie sicher, dass Sie die Bedingungen akzeptieren möchten?",
+                modalBtnOk: "Ja",
+                modalBtnNotOk: "Nein",
+                submit: "Kauf abschließen",
+                showIssues: "Probleme anzeigen",
+                showRemediations: "Lösungen anzeigen",
+                introGood: "Haben Sie bemerkt, dass sich die Seite optisch nicht verändert hat? Dennoch ist das Formular nun tastaturfreundlich. Hier ist der Grund:",
+                critiqueTitleBad: "Was ist falsch?",
+                critiqueTitleGood: "Lösungen",
+                toastSuccess: "Aktion erfolgreich!",
+                months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+                statusInaccessible: "Unzugänglich",
+                statusAccessible: "Zugänglich",
+                critiques: {
+                    bad: [
+                        { f: "Vorname Nachname", c: "Das Formular hilft Ihnen nicht beim Ausfüllen Ihres Namens. Sie müssen alles jedes Mal manuell eingeben." },
+                        { f: "Hilfe-Icon", c: "Der Hilfetext erscheint nur beim Bewegen der Maus. Für Tastaturbenutzer ist diese Information komplett verborgen." },
+                        { f: "Verstecktes Feld", c: "Zwischen dem Namen und dem Datumsfeld befindet sich ein unsichtbares Feld. Wenn Sie mit Tab hineinspringen, verlieren Sie die Orientierung auf der Seite." },
+                        { f: "Geburtsdatum", c: "Das Auswählen eines Datums ist anstrengend. Sie müssen die 'Tab'-Taste dutzende Male drücken, um durch jeden einzelnen Tag zu navigieren." },
+                        { f: "Ich akzeptiere die Bedingungen", c: "Wenn Sie mit der Tastatur durch die Seite navigieren, leuchtet dieses Kontrollkästchen nicht auf. Sie sehen nicht, wo Sie sich befinden." },
+                        { f: "Bestätigungsdialog", c: "Wenn sich das Fenster öffnet, springt der Tastaturfokus nicht automatisch hinein. Außerdem ist es schwer zu erkennen, welche Schaltfläche markiert ist, da der Rand zu schwach ist." }
+                    ],
+                    good: [
+                        { f: "Vorname Nachname", c: "Der Browser schlägt Ihren Namen automatisch vor, sodass Sie ihn nicht manuell eingeben müssen." },
+                        { f: "Hilfe-Icon", c: "Die Information erscheint nun bei Mouseover und Klick. Wir haben den Fokus-Trigger entfernt, um den Tastaturfluss nicht zu überladen." },
+                        { f: "Verstecktes Feld", c: "Dieser unnötige Stopp wurde entfernt, um einen direkten und logischen Pfad durch das Formular zu gewährleisten." },
+                        { f: "Geburtsdatum", c: "Die Kalenderschaltfläche ist nun in das Feld integriert und fokussierbar, und die manuelle Eingabe wird durch eine automatische Maske verbessert." },
+                        { f: "Ich akzeptiere die Bedingungen", c: "Das Kontrollkästchen zeigt nun einen deutlichen Fokusring an, der Ihnen hilft, genau zu erkennen, wo Sie sich beim Navigieren befinden." },
+                        { f: "Bestätigungsdialog", c: "Ihr Tastaturfokus springt direkt zur 'Ja'-Schaltfläche, sodass Sie sie sofort drücken können, mit einem klaren 1px weißen Innenrand als Fokus." }
+                    ]
+                }
             }
         };
 
         let currentLang = 'en';
 
+        // Autocomplete suggestions
         function forceAutocomplete(input) {
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
@@ -514,6 +564,7 @@
             suggestion.value = val.length > 0 ? TARGET_NAME : "";
         }
 
+        // Mask logic for Birth Date
         function handleDateInput(e) {
             let val = e.target.value.replace(/\D/g, ''); 
             if (val.length > 8) val = val.substring(0, 8);
@@ -549,13 +600,15 @@
             document.getElementById('txt-btn-good').innerText = t.submit;
             document.getElementById('statusLabel').innerText = t.statusInaccessible;
             document.getElementById('accessibleLabel').innerText = t.statusAccessible;
+            document.getElementById('txt-toggle-critique').innerText = t.showIssues;
+            
             const mSelect = document.getElementById('monthSelect');
             mSelect.innerHTML = '';
             t.months.forEach((m, i) => {
                 const opt = document.createElement('option');
                 opt.value = (i+1).toString().padStart(2, '0');
                 opt.textContent = m;
-                if(i === 1) opt.selected = true; // Default Feb
+                if(i === 1) opt.selected = true; // Feb
                 mSelect.appendChild(opt);
             });
             updateModeLabels();
@@ -566,11 +619,11 @@
         function updateModeLabels() {
             const isAccessible = document.getElementById('modeToggle').checked;
             const t = translations[currentLang];
-            document.getElementById('txt-toggle-critique').innerText = isAccessible ? t.showRemediations : t.showIssues;
-            document.getElementById('txt-critique-title').innerText = isAccessible ? t.critiqueTitleGood : t.critiqueTitleBad;
             const panel = document.getElementById('critiqueContent');
             const data = isAccessible ? t.critiques.good : t.critiques.bad;
             
+            document.getElementById('txt-critique-title').innerText = isAccessible ? t.critiqueTitleGood : t.critiqueTitleBad;
+
             let html = '';
             if (isAccessible) {
                 html += `<p class="mb-6 font-bold text-blue-200 italic border-b border-gray-700 pb-4">${t.introGood}</p>`;
@@ -648,9 +701,7 @@
             const bodyTag = document.getElementById('bodyTag');
             const calContainer = document.getElementById('calendarContainer');
             
-            // Explicitly hide calendar when switching modes
             calContainer.style.display = 'none';
-            
             document.getElementById('inputEmail').value = '';
             document.getElementById('inputBirth').value = '';
             document.getElementById('checkTerms').checked = false;
@@ -707,9 +758,7 @@
         function renderCalendar(isAccessible) {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            const today = new Date().getDate(); // 11
-            const currentMonth = "02"; // February
-            const currentYear = "2026";
+            const today = 11;
 
             for (let i = 1; i <= 28; i++) {
                 const dayStr = i.toString().padStart(2, '0');
@@ -726,10 +775,8 @@
                 if (isAccessible) {
                     d.setAttribute('tabindex', '0');
                     d.onclick = () => selectDate(dayStr);
-                    // Standard accessible selection handling for keyboard
                     d.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') selectDate(dayStr); };
                 } else {
-                    // Inaccessible version uses actual button to show default behaviors
                     const b = document.createElement('button');
                     b.type = "button";
                     b.className = "calendar-day w-full h-full flex items-center justify-center rounded";
@@ -752,7 +799,6 @@
         }
 
         function handleBirthFocus(isFocused) {
-            // Only auto-open in inaccessible mode
             if (isFocused && !document.getElementById('modeToggle').checked) {
                 openCalendar();
             }
