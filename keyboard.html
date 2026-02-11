@@ -347,12 +347,12 @@
 
                     <div class="pt-4 w-48">
                         <div id="submitBad">
-                            <div id="txt-btn-bad" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-center cursor-pointer shadow transition-colors text-sm btn-disabled" onclick="showMessage('Purchase Complete!')">
+                            <div id="txt-btn-bad" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-center cursor-pointer shadow transition-colors text-sm btn-disabled" onclick="showMessage()">
                                 Complete Purchase
                             </div>
                         </div>
                         <div id="submitGood" class="hidden">
-                            <button id="txt-btn-good" class="w-full bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-blue-700 transition-colors text-sm btn-disabled" disabled onclick="showMessage('Purchase Complete!')">
+                            <button type="button" id="txt-btn-good" class="w-full bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow hover:bg-blue-700 transition-colors text-sm btn-disabled" disabled onclick="showMessage()">
                                 Complete Purchase
                             </button>
                         </div>
@@ -427,7 +427,7 @@
                         { f: "Easy help", c: "The help text is now simple to open for everyone, whether using a mouse or a keyboard." },
                         { f: "Smooth path", c: "The invisible obstacles are gone. Your cursor now moves logically from one field to the next." },
                         { f: "Quick date", c: "You can now type your date directly and quickly. It is much faster than clicking through a calendar." },
-                        { f: "Clear focus", c: "The checkbox is clearly highlighted when you reach it, so you always know exactly where you are." },
+                        { f: "Clear focus", c: "The checkbox is clearly highlighted when you reach it, so you always know where you are." },
                         { f: "Ready to click", c: "The selection starts exactly on the 'Yes' button and is clearly visible." }
                     ]
                 }
@@ -461,7 +461,7 @@
                         { f: "Champ Nom", c: "Votre nom n'est pas proposé automatiquement. Vous devez tout taper à la main à chaque fois." },
                         { f: "Bulle d'aide", c: "L'info est cachée si vous n'utilisez pas de souris. Les utilisateurs clavier ne peuvent pas la voir." },
                         { f: "Le Vide", c: "Il y a une zone invisible entre les cases. Votre curseur s'y perd et vous ne savez plus où vous êtes." },
-                        { f: "Date du passeport", c: "Choisir une date est trop long. Il faut cliquer de nombreuses fois pour arriver à l'année." },
+                        { f: "Mise à jour", c: "Choisir une date est trop long. Il faut cliquer de nombreuses fois pour arriver à l'année." },
                         { f: "Cases à cocher", c: "On ne voit pas quand la case est sélectionnée au clavier. Elle n'est pas mise en évidence." },
                         { f: "Fenêtres", c: "La fenêtre s'ouvre mais on ne voit pas quel bouton est prêt à être cliqué." }
                     ],
@@ -504,8 +504,8 @@
                         { f: "Naamveld", c: "Je naam wordt niet voorgesteld. Je moet alles elke keer handmatig typen." },
                         { f: "Hulpinformatie", c: "Deze info is onzichtbaar zonder muis. Toetsenbordgebruikers zien dit niet." },
                         { f: "Lege gaten", c: "De cursor verdwijnt op onzichtbare plekken tussen de velden." },
-                        { f: "Paspoort datum", c: "Een datum kiezen duurt te lang door het vele klikken." },
-                        { f: "Vinkjes", c: "Je ziet niet wanneer een vinkje geselecteerd is met het toetsenbord." },
+                        { f: "Update-veld", c: "Een datum kiezen duurt te lang door het vele klikken." },
+                        { f: "Vinkjes", c: "Je ziet niet wanneer een vinkje geselectreerd is met het toetsenbord." },
                         { f: "Vensters", c: "Je ziet niet welke knop actief is in het nieuwe venster." }
                     ],
                     good: [
@@ -547,7 +547,7 @@
                         { f: "Namensfeld", c: "Das Formular schlägt Ihren Namen nicht vor. Sie müssen alles selbst tippen." },
                         { f: "Hilfetext", c: "Diese Information ist ohne Maus versteckt. Tastaturnutzer können sie nicht sehen." },
                         { f: "Leerraum", c: "Der Cursor verschwindet an unsichtbaren Stellen zwischen den Feldern." },
-                        { f: "Paspoort-Datum", c: "Ein Datum zu wählen dauert zu lange durch das viele Klicken." },
+                        { f: "Update-Feld", c: "Ein Datum zu wählen dauert zu lange durch das viele Klicken." },
                         { f: "Häkchen", c: "Man sieht nicht, wenn ein Feld mit der Tastatur gewählt ist." },
                         { f: "Fenster", c: "Man sieht nicht, welcher Knopf im Fenster gerade aktiv ist." }
                     ],
@@ -570,7 +570,7 @@
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
             const val = input.value.toLowerCase();
-            suggestion.value = val.length > 0 ? TARGET_NAME : "";
+            if (suggestion) suggestion.value = val.length > 0 ? TARGET_NAME : "";
         }
 
         function handleDateInput(e) {
@@ -590,7 +590,7 @@
         function setLanguage(lang) {
             currentLang = lang;
             const t = translations[lang];
-            // FIXED: Ensuring all references match the correct IDs
+            
             const labTitleEl = document.getElementById('txt-lab-title');
             if (labTitleEl) labTitleEl.innerText = t.labTitle;
             
@@ -749,6 +749,16 @@
                     good.setAttribute('disabled', 'true');
                 }
             }
+        }
+
+        function showMessage() {
+            if (!isConfirmed) return;
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            const t = translations[currentLang];
+            toast.innerText = t.toastSuccess;
+            toast.style.opacity = '1';
+            setTimeout(() => toast.style.opacity = '0', 3000);
         }
 
         function toggleMode() {
