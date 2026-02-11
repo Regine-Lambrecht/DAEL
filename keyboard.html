@@ -21,7 +21,24 @@
             box-shadow: none !important;
         }
 
-        /* Specific Exception: Always show focus on Month/Year in Calendar */
+        /* --- PERSISTENT KEYBOARD ACCESSIBILITY FOR LAB CONTROLS --- */
+        /* Always show focus on Header controls so the user can operate the lab itself */
+        .lang-btn:focus-visible, 
+        #critiqueToggle:focus-visible {
+            outline: 2px solid #2563eb !important;
+            outline-offset: 2px !important;
+            border-radius: 4px;
+        }
+
+        /* Focus indicator for the main mode toggle switch */
+        .switch input:focus-visible + .slider {
+            outline: 2px solid #2563eb;
+            outline-offset: 4px;
+            box-shadow: 0 0 0 2px white;
+        }
+        /* ---------------------------------------------------------- */
+
+        /* Specific Exception: Always show focus on Month/Year in Calendar as requested previously */
         #monthSelect:focus, #yearSelect:focus {
             outline: 2px solid #2563eb !important;
             outline-offset: 1px;
@@ -91,11 +108,11 @@
             border-color: transparent #1f2937 transparent transparent;
         }
 
-        /* Tooltip Visibility: Show on Hover OR Focus for both versions */
-        .info-icon-bad:hover + .tooltip-box, 
-        .info-icon-bad:focus + .tooltip-box,
-        .info-icon-good:hover + .tooltip-box, 
-        .info-icon-good:focus + .tooltip-box { 
+        /* Tooltip Visibility: Hover or Focus */
+        .info-icon-bad:hover ~ .tooltip-box, 
+        .info-icon-bad:focus ~ .tooltip-box,
+        .info-icon-good:hover ~ .tooltip-box, 
+        .info-icon-good:focus ~ .tooltip-box { 
             display: block; 
         }
         
@@ -186,6 +203,7 @@
             </div>
             
             <div class="flex flex-wrap items-center gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200">
+                <!-- Mode Switchers -->
                 <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
                     <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
                     <label class="switch">
@@ -195,11 +213,13 @@
                     <span class="text-xs font-black uppercase tracking-widest text-green-700" id="accessibleLabel">Accessible</span>
                 </div>
 
+                <!-- Error Toggle (Keep Keyboard Accessible) -->
                 <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
                     <span id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Show errors</span>
                     <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
                 </div>
 
+                <!-- Language Switcher (Keep Keyboard Accessible) -->
                 <div class="flex gap-2 text-[10px] font-bold">
                     <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
                     <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
@@ -215,22 +235,20 @@
                 <div class="space-y-6">
                     <div class="space-y-6">
                         
-                        <!-- Email Field -->
-                        <div class="flex flex-col max-w-sm">
+                        <!-- Email Field (Wider) -->
+                        <div class="flex flex-col max-w-md">
                             <div class="flex items-center gap-2 mb-1">
                                 <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">E-mail Address</label>
                                 <div class="relative flex items-center">
-                                    <!-- Inaccessible Icon: tabindex added to allow focus -->
                                     <span id="emailIconBad" class="info-icon-bad w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white" tabindex="0">i</span>
-                                    <!-- Accessible Icon -->
-                                    <button type="button" id="emailIconGood" class="info-icon-good hidden w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white hover:bg-blue-800" aria-label="E-mail information">i</button>
+                                    <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-3.5 h-3.5 rounded-full bg-blue-700 text-[9px] flex items-center justify-center cursor-help font-bold text-white hover:bg-blue-800" aria-label="E-mail information">i</button>
                                     <div id="txt-tooltip" class="tooltip-box">Here is a help text</div>
                                 </div>
                             </div>
                             <input 
                                 type="email" 
                                 id="inputEmail" 
-                                class="border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm" 
+                                class="border border-gray-300 p-2 rounded-lg bg-gray-50 text-sm w-full" 
                                 placeholder=""
                                 autocomplete="off"
                                 list="email-list"
@@ -241,8 +259,13 @@
                             </datalist>
                         </div>
 
-                        <!-- Birth Date -->
-                        <div class="flex flex-col relative max-w-sm">
+                        <!-- Hidden field "The Void" -->
+                        <div class="relative">
+                            <input type="text" id="theVoid" class="absolute opacity-0 pointer-events-none" style="width:1px; height:1px;">
+                        </div>
+
+                        <!-- Birth Date (Narrower) -->
+                        <div class="flex flex-col relative w-48">
                             <label for="inputBirth" id="txt-label-birth" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Birth Date</label>
                             <span class="text-[9px] text-gray-500 mb-1" id="txt-format-hint">Format: dd/mm/yyyy</span>
                             <div class="flex gap-2">
@@ -275,7 +298,7 @@
                         </div>
 
                         <!-- Terms Checkbox -->
-                        <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200 max-w-sm">
+                        <div class="flex items-center gap-3 py-2 max-w-sm">
                             <input type="checkbox" id="checkTerms" class="w-4 h-4 cursor-pointer" onchange="handleTermsToggle()">
                             <label for="checkTerms" class="text-sm font-semibold text-gray-700">
                                 <span id="txt-terms-prefix">I accept the</span> 
@@ -284,12 +307,7 @@
                         </div>
                     </div>
 
-                    <!-- Hidden field "The Void" -->
-                    <div class="relative">
-                        <input type="text" id="theVoid" class="absolute opacity-0 pointer-events-none" style="width:1px; height:1px;">
-                    </div>
-
-                    <div class="pt-4 max-w-sm">
+                    <div class="pt-4 max-w-md">
                         <div id="submitBad">
                             <div id="txt-btn-bad" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg text-center cursor-pointer shadow transition-colors text-sm btn-disabled" onclick="showMessage('Purchase Complete!')">
                                 Complete Purchase
@@ -337,12 +355,12 @@
                 title: "Keyboard experience",
                 email: "E-mail Address",
                 helpIcon: "Help icon",
+                hiddenField: "Hidden field",
                 birth: "Birth Date",
                 format: "Format: dd/mm/yyyy",
                 tooltip: "Here is a help text",
                 termsPrefix: "I accept the",
                 termsLink: "conditions",
-                hiddenField: "Hidden field",
                 modalTitle: "Confirm Terms",
                 modalBody: "Are you sure you want to accept the terms and conditions?",
                 modalBtnOk: "Yes",
@@ -360,17 +378,17 @@
                     bad: [
                         { f: "E-mail Address", c: "The form doesn't help you fill in your address. You have to type the whole thing manually every time." },
                         { f: "Help icon", c: "The help text only appears on hover. For keyboard users, this information is completely hidden as it can't be focused." },
+                        { f: "Hidden field", c: "There is an invisible box between the e-mail and the date field. If you tab into it, you'll lose track of where you are on the page." },
                         { f: "Birth Date", c: "Selecting a date is exhausting. You have to press the 'Tab' key dozens of times to move through every single day." },
                         { f: "I accept the conditions", c: "When you move through the page using your keyboard, this checkbox doesn't light up. You can't see where you are." },
-                        { f: "Hidden field", c: "There is an invisible box between the checkbox and the final button. If you tab into it, you'll lose track of where you are on the page." },
                         { f: "Confirmation Dialog", c: "When the window opens, the keyboard focus doesn't jump into it automatically. It's also hard to see which button is highlighted because the border is too faint." }
                     ],
                     good: [
                         { f: "E-mail Address", c: "The browser automatically suggests your email address so you don't have to type it out manually." },
-                        { f: "Help icon", c: "The icon is now a focusable element. When you reach it with your keyboard or mouse, the message appears clearly." },
-                        { f: "Birth Date", c: "You can just type the date directly, or use a quick shortcut to pick it from the calendar." },
+                        { f: "Help icon", c: "The icon is now focusable. When you reach it with your keyboard or mouse, the message appears clearly." },
+                        { f: "Hidden field", c: "This unnecessary stop has been removed, ensuring a direct and logical path through the form." },
+                        { f: "Birth Date", c: "Manual typing is improved with an automatic mask that handles the '/' separators for you." },
                         { f: "I accept the conditions", c: "The checkbox now shows a clear focus ring, helping you identify exactly where you are while navigating." },
-                        { f: "Hidden field", c: "This unnecessary stop has been removed, ensuring a direct and logical path to the finish button." },
                         { f: "Confirmation Dialog", c: "Your keyboard focus jumps directly to the 'Yes' button so you can press it instantly, with a clear 1px inner white border as focus." }
                     ]
                 }
@@ -379,6 +397,7 @@
                 title: "Expérience clavier",
                 email: "Adresse E-mail",
                 helpIcon: "Icône d'aide",
+                hiddenField: "Champ invisible",
                 birth: "Date de Naissance",
                 format: "Format : jj/mm/aaaa",
                 tooltip: "Ceci est un texte d'aide",
@@ -402,17 +421,17 @@
                     bad: [
                         { f: "Adresse E-mail", c: "Le formulaire ne vous aide pas à remplir votre adresse. Vous devez tout taper manuellement." },
                         { f: "Icône d'aide", c: "Le texte d'aide ne s'affiche qu'au survol. Pour les utilisateurs du clavier, cette info est inaccessible." },
+                        { f: "Champ invisible", c: "Il y a une case invisible entre l'e-mail et la date. Vous perdrez le fil de votre navigation si vous tombez dessus." },
                         { f: "Date de Naissance", c: "Choisir une date est épuisant. Vous devez appuyer sur 'Tab' des dizaines de fois." },
                         { f: "J'accepte les conditions", c: "Quand vous naviguez au clavier, cette case ne s'entoure pas de couleur. On ne sait pas où l'on est." },
-                        { f: "Champ invisible", c: "Il y a une case invisible entre la case à cocher et le bouton final. Vous perdrez le fil de votre navigation." },
                         { f: "Fenêtre de Confirmation", c: "Le focus ne se déplace pas automatiquement dans la fenêtre. De plus, il est difficile de voir quel bouton est sélectionné car le contour est trop discret." }
                     ],
                     good: [
                         { f: "Adresse E-mail", c: "Le navigateur propose automatiquement votre e-mail pour vous faire gagner du temps." },
                         { f: "Icône d'aide", c: "L'icône est maintenant focalisable. Au clavier ou à la souris, le message s'affiche clairement." },
-                        { f: "Date de Naissance", c: "Vous pouvez taper la date directement ou utiliser un raccourci rapide." },
+                        { f: "Champ invisible", c: "Cet arrêt inutile a été supprimé pour garantir un parcours fluide dans le formulaire." },
+                        { f: "Date de Naissance", c: "La saisie est simplifiée par un masque automatique qui gère les '/' pour vous." },
                         { f: "J'accepte les conditions", c: "La case affiche désormais un contour de focus clair pour guider la navigation clavier." },
-                        { f: "Champ invisible", c: "Cet arrêt inutile a été supprimé pour garantir un parcours direct vers la validation." },
                         { f: "Fenêtre de Confirmation", c: "Le curseur se place sur 'Oui' dès l'ouverture, avec une bordure blanche intérieure de 1px très visible." }
                     ]
                 }
@@ -421,6 +440,7 @@
                 title: "Toetsenbordervaring",
                 email: "E-mailadres",
                 helpIcon: "Help-icoon",
+                hiddenField: "Verborgen veld",
                 birth: "Geboortedatum",
                 format: "Formaat: dd/mm/jjjj",
                 tooltip: "Hier is een helptekst",
@@ -444,17 +464,17 @@
                     bad: [
                         { f: "E-mailadres", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
                         { f: "Help-icoon", c: "De helptekst verschijnt alleen bij muisover. Toetsenbordgebruikers kunnen deze informatie niet zien." },
+                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de e-mail en de datum. Je raakt de weg kwijt op de pagina." },
                         { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
                         { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
-                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de checkbox en de knop. Je raakt de weg kwijt op de pagina." },
                         { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
                     ],
                     good: [
                         { f: "E-mailadres", c: "De browser stelt je e-mailadres automatisch voor bij elke letter." },
                         { f: "Help-icoon", c: "Het icoon is nu focusbaar. Bij toetsenbord- of muisgebruik verschijnt het bericht duidelijk." },
-                        { f: "Geboortedatum", c: "Je kunt de datum gewoon typen of een snelle kortere weg gebruiken." },
+                        { f: "Verborgen veld", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
+                        { f: "Geboortedatum", c: "Handmatige invoer is verbeterd met een masker dat automatisch de '/' toevoegt." },
                         { f: "Ik accepteer de voorwaarden", c: "De checkbox toont nu een duidelijke focusrand." },
-                        { f: "Verborgen veld", c: "Deze onnodige tussenstop is verwijderd, wat zorgt voor een directe route naar de knop." },
                         { f: "Bevestigingsvenster", c: "Je focus springt direct naar de 'Ja' knop, met een duidelijke 1px witte binnenrand." }
                     ]
                 }
@@ -463,11 +483,30 @@
 
         let currentLang = 'en';
 
+        // Ensures the autocomplete suggestion matches partial input
         function forceAutocomplete(input) {
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
             const val = input.value.toLowerCase();
             suggestion.value = val.length > 0 ? TARGET_EMAIL : "";
+        }
+
+        // Mask logic for dd/mm/yyyy
+        function handleDateInput(e) {
+            let val = e.target.value.replace(/\D/g, ''); 
+            if (val.length > 8) val = val.substring(0, 8);
+            
+            let finalVal = '';
+            if (val.length > 0) {
+                finalVal += val.substring(0, 2);
+                if (val.length > 2) {
+                    finalVal += '/' + val.substring(2, 4);
+                    if (val.length > 4) {
+                        finalVal += '/' + val.substring(4, 8);
+                    }
+                }
+            }
+            e.target.value = finalVal;
         }
 
         function setLanguage(lang) {
@@ -522,7 +561,6 @@
         }
 
         function toggleTooltip() {
-            // Logic for accessible version click if hover/focus is not enough
             if (document.getElementById('modeToggle').checked) {
                 const tt = document.getElementById('txt-tooltip');
                 tt.classList.toggle('tooltip-visible');
@@ -587,7 +625,6 @@
 
             renderCalendar(isAccessible);
             const inputBirth = document.getElementById('inputBirth');
-            const inputEmail = document.getElementById('inputEmail');
             const theVoid = document.getElementById('theVoid');
             
             document.getElementById('txt-tooltip').classList.remove('tooltip-visible', 'hidden-forced');
@@ -595,8 +632,9 @@
             if (isAccessible) {
                 bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 accessible-mode";
                 inputBirth.removeAttribute('readonly');
+                inputBirth.oninput = handleDateInput;
                 document.getElementById('calendarToggleBtn').classList.remove('hidden');
-                inputEmail.setAttribute('autocomplete', 'email');
+                document.getElementById('inputEmail').setAttribute('autocomplete', 'email');
                 document.getElementById('emailIconBad').classList.add('hidden');
                 document.getElementById('emailIconGood').classList.remove('hidden');
                 document.getElementById('submitBad').classList.add('hidden');
@@ -606,9 +644,10 @@
             } else {
                 bodyTag.className = "bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode";
                 inputBirth.setAttribute('readonly', true);
+                inputBirth.oninput = null;
                 document.getElementById('calendarToggleBtn').classList.add('hidden');
                 document.getElementById('calendarContainer').style.display = 'none';
-                inputEmail.setAttribute('autocomplete', 'off');
+                document.getElementById('inputEmail').setAttribute('autocomplete', 'off');
                 document.getElementById('emailIconBad').classList.remove('hidden');
                 document.getElementById('emailIconGood').classList.add('hidden');
                 document.getElementById('submitBad').classList.remove('hidden');
