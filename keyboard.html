@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keyboard experience - Checkout Comparison</title>
+    <title>Keyboard experience - Digital Accessibility Empathy Lab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .transition-all { transition: all 0.3s ease; }
@@ -122,7 +122,7 @@
             left: 0;
             margin-top: 0.5rem;
             background: white;
-            border: 1px solid #6b7280;
+            border: 1px solid #6b7280; /* Higher contrast border */
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             z-index: 40;
             padding: 10px;
@@ -213,46 +213,63 @@
 
     <div class="demo-container bg-white shadow-2xl rounded-3xl overflow-hidden">
         
-        <header class="p-4 md:p-6 border-b border-gray-100 flex flex-col gap-4 bg-white sticky top-0 z-50">
-            <!-- Tools bar -->
-            <div class="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200 w-full">
+        <header class="bg-white border-b border-gray-100">
+            <!-- Empathy Lab Header -->
+            <div class="p-6 flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-50">
                 <div class="flex items-center gap-4">
-                    <!-- Mode Switcher -->
-                    <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
-                        <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
-                        <label class="switch">
-                            <input 
-                                type="checkbox" 
-                                id="modeToggle" 
-                                onchange="toggleMode()" 
-                                role="switch" 
-                                aria-label="Toggle accessibility version"
-                                aria-checked="false"
-                            >
-                            <span class="slider"></span>
-                        </label>
-                        <span id="accessibleLabel" class="text-xs font-black uppercase tracking-widest text-green-700">Accessible</span>
+                    <div class="w-12 h-12 flex-shrink-0">
+                        <!-- Eleven Ways SVG Logo representation -->
+                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                            <circle cx="50" cy="50" r="48" fill="#008a5e" />
+                            <path d="M30 40 L30 70 M40 30 L40 70 M55 70 L75 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
+                        </svg>
                     </div>
-
-                    <!-- Issues Toggle -->
-                    <div class="flex items-center gap-2">
-                        <label for="critiqueToggle" id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest cursor-pointer">Show issues</label>
-                        <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
-                    </div>
-                </div>
-
-                <!-- Language Switcher -->
-                <div class="flex gap-2 text-[10px] font-bold">
-                    <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
-                    <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
-                    <button onclick="setLanguage('nl')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-nl">NL</button>
-                    <button onclick="setLanguage('de')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-de">DE</button>
+                    <h1 id="txt-lab-title" class="text-2xl font-black text-gray-900 tracking-tight leading-tight uppercase">Digital Accessibility Empathy Lab</h1>
                 </div>
             </div>
 
-            <!-- Page Title -->
-            <div class="w-full">
-                <h1 id="txt-title" class="text-xl font-black text-gray-900 tracking-tight text-left">Keyboard experience</h1>
+            <!-- Tools bar -->
+            <div class="p-4 flex flex-col gap-4">
+                <div class="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200 w-full">
+                    <!-- Left Side: Toggle and Checkbox -->
+                    <div class="flex items-center gap-4">
+                        <!-- Mode Switcher (WCAG Compliant) -->
+                        <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
+                            <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
+                            <label class="switch">
+                                <input 
+                                    type="checkbox" 
+                                    id="modeToggle" 
+                                    onchange="toggleMode()" 
+                                    role="switch" 
+                                    aria-label="Toggle accessibility version"
+                                    aria-checked="false"
+                                >
+                                <span class="slider"></span>
+                            </label>
+                            <span id="accessibleLabel" class="text-xs font-black uppercase tracking-widest text-green-700">Accessible</span>
+                        </div>
+
+                        <!-- Issues Toggle (Semantic Label) -->
+                        <div class="flex items-center gap-2">
+                            <label for="critiqueToggle" id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest cursor-pointer">Show issues</label>
+                            <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Language Switcher -->
+                    <div class="flex gap-2 text-[10px] font-bold">
+                        <button onclick="setLanguage('en')" class="lang-btn px-2 py-1 rounded bg-blue-600 text-white" id="btn-en">EN</button>
+                        <button onclick="setLanguage('fr')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-fr">FR</button>
+                        <button onclick="setLanguage('nl')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-nl">NL</button>
+                        <button onclick="setLanguage('de')" class="lang-btn px-2 py-1 rounded bg-gray-200 text-gray-700" id="btn-de">DE</button>
+                    </div>
+                </div>
+
+                <!-- Specific Page Title -->
+                <div class="w-full pl-2">
+                    <h2 id="txt-title" class="text-lg font-bold text-gray-400 tracking-tight text-left italic">Keyboard experience</h2>
+                </div>
             </div>
         </header>
 
@@ -310,6 +327,7 @@
                                     onfocus="handleBirthFocus(true)"
                                     readonly
                                 >
+                                <!-- Icon Area INSIDE the field -->
                                 <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2">
                                     <span id="calendarIconBad" class="w-6 h-6 flex items-center justify-center text-sm cursor-default">📅</span>
                                     <button 
@@ -388,6 +406,7 @@
 
         const translations = {
             en: {
+                labTitle: "Digital Accessibility Empathy Lab",
                 title: "Keyboard experience",
                 nameLabel: "Name Surname",
                 helpIcon: "Help icon",
@@ -431,6 +450,7 @@
                 }
             },
             fr: {
+                labTitle: "Labo d'Empathie Accessibilité Numérique",
                 title: "Expérience clavier",
                 nameLabel: "Nom Prénom",
                 helpIcon: "Icône d'aide",
@@ -474,6 +494,7 @@
                 }
             },
             nl: {
+                labTitle: "Digitaal Toegankelijkheid Empathie Lab",
                 title: "Toetsenbordervaring",
                 nameLabel: "Naam Voornaam",
                 helpIcon: "Help-icoon",
@@ -517,6 +538,7 @@
                 }
             },
             de: {
+                labTitle: "Empathie-Labor für digitale Barrierefreiheit",
                 title: "Tastaturerfahrung",
                 nameLabel: "Vorname Nachname",
                 helpIcon: "Hilfe-Icon",
@@ -550,7 +572,7 @@
                         { f: "Bestätigungsdialog", c: "Das Fenster ist von der Tastatur getrennt. Man sieht nicht, welcher Knopf gewählt ist." }
                     ],
                     good: [
-                        { f: "Vorname Nachname", c: "Der Browser merkt sich Ihren Namen und schlägt ihn vor, sobald Sie anfangen zu tippen." },
+                        { f: "Vorname Nachname", c: "Der Browser schlägt Ihren Namen automatisch vor, sobald Sie anfangen zu tippen." },
                         { f: "Hilfe-Icon", c: "Der Hilfetext ist nun für alle einfach zu öffnen, egal ob mit Maus oder Tastatur." },
                         { f: "Direkter Weg", c: "Das unsichtbare Hindernis wurde entfernt. Ihr Cursor bewegt sich nun logisch von Feld zu Feld." },
                         { f: "Geburtsdatum", c: "Sie können Ihr Datum jetzt direkt und schnell eintippen, ohne langes Klicken." },
@@ -563,6 +585,7 @@
 
         let currentLang = 'en';
 
+        // Autocomplete suggestions
         function forceAutocomplete(input) {
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
@@ -590,6 +613,7 @@
         function setLanguage(lang) {
             currentLang = lang;
             const t = translations[lang];
+            document.getElementById('txt-lab-title').innerText = t.labTitle;
             document.getElementById('txt-title').innerText = t.title;
             document.getElementById('txt-label-email').innerText = t.nameLabel;
             document.getElementById('txt-label-birth').innerText = t.birth;
