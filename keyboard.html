@@ -500,7 +500,7 @@
                         { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
                     ],
                     good: [
-                        { f: "Naam Voornaam", c: "De browser stelt je naam automatisch voor bij elke letter." },
+                        { f: "Naam Voornaam", c: "De browser stelt je naam automatisch voor bei elke letter." },
                         { f: "Help-icoon", c: "Informatie verschijnt bij mouseover en klik. We hebben de focus-trigger verwijderd voor een rustiger keyboard-traject." },
                         { f: "Hidden field", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
                         { f: "Geboortedatum", c: "De kalenderknop is nu geïntegreerd in het veld en focusbaar, en invoer is verbeterd met een masker." },
@@ -600,7 +600,6 @@
             document.getElementById('txt-btn-good').innerText = t.submit;
             document.getElementById('statusLabel').innerText = t.statusInaccessible;
             document.getElementById('accessibleLabel').innerText = t.statusAccessible;
-            document.getElementById('txt-toggle-critique').innerText = t.showIssues;
             
             const mSelect = document.getElementById('monthSelect');
             mSelect.innerHTML = '';
@@ -622,6 +621,7 @@
             const panel = document.getElementById('critiqueContent');
             const data = isAccessible ? t.critiques.good : t.critiques.bad;
             
+            document.getElementById('txt-toggle-critique').innerText = isAccessible ? t.showRemediations : t.showIssues;
             document.getElementById('txt-critique-title').innerText = isAccessible ? t.critiqueTitleGood : t.critiqueTitleBad;
 
             let html = '';
