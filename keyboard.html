@@ -23,7 +23,7 @@
 
         /* Persistent keyboard accessibility for the actual lab controls */
         .lang-btn:focus-visible, 
-        #critiqueToggle:focus-visible {
+        .tab-btn:focus-visible {
             outline: 2px solid #2563eb !important;
             outline-offset: 2px !important;
             border-radius: 4px;
@@ -198,6 +198,16 @@
             cursor: not-allowed !important;
             pointer-events: none;
         }
+
+        /* Tab specific styles */
+        .tab-btn[aria-selected="true"] {
+            background-color: #111827;
+            color: #60a5fa;
+            border-bottom: 2px solid #60a5fa;
+        }
+        .tab-btn[aria-selected="false"]:hover {
+            background-color: #374151;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 md:p-8 font-sans transition-colors duration-500 inaccessible-mode" id="bodyTag">
@@ -218,9 +228,9 @@
             <!-- Toolbar in a navigation landmark -->
             <nav class="p-4 flex flex-col gap-4" aria-label="Interface controls">
                 <div class="flex flex-wrap items-center justify-between gap-4 bg-gray-50 p-3 rounded-2xl border border-gray-200 w-full">
-                    <!-- Left Side: Toggle and Checkbox -->
+                    <!-- Left Side: Toggle -->
                     <div class="flex items-center gap-4">
-                        <div class="flex items-center gap-2 pr-4 border-r border-gray-200">
+                        <div class="flex items-center gap-2 pr-4">
                             <span id="statusLabel" class="text-xs font-black uppercase tracking-widest text-red-600">Inaccessible</span>
                             <label class="switch">
                                 <input 
@@ -234,11 +244,6 @@
                                 <span class="slider"></span>
                             </label>
                             <span id="accessibleLabel" class="text-xs font-black uppercase tracking-widest text-green-700">Accessible</span>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <label for="critiqueToggle" id="txt-toggle-critique" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest cursor-pointer">Show issues</label>
-                            <input type="checkbox" id="critiqueToggle" onchange="toggleCritiquePanel()" class="w-4 h-4 cursor-pointer">
                         </div>
                     </div>
 
@@ -262,6 +267,7 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-16">
                 
+                <!-- Form Section (1/4) -->
                 <div class="lg:col-span-1 space-y-6">
                     <div class="space-y-6">
                         
@@ -359,11 +365,46 @@
                     </div>
                 </div>
 
-                <!-- Sidebar for issues -->
-                <div class="lg:col-span-3 space-y-6">
-                    <div id="critiquePanel" class="hidden bg-gray-900 text-white p-8 rounded-2xl shadow-xl space-y-6 h-full">
-                        <h3 id="txt-critique-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
-                        <div id="critiqueContent" class="text-sm space-y-6 opacity-95 leading-relaxed"></div>
+                <!-- Info/Tabs Section (3/4) -->
+                <div class="lg:col-span-3">
+                    <div id="critiquePanel" class="bg-gray-900 text-white rounded-2xl shadow-xl overflow-hidden h-full flex flex-col">
+                        <!-- Tab Bar -->
+                        <div role="tablist" class="flex bg-gray-800 border-b border-gray-700">
+                            <button 
+                                id="tab-test" 
+                                role="tab" 
+                                aria-selected="true" 
+                                aria-controls="panel-test" 
+                                onclick="switchTab('test')"
+                                class="tab-btn px-6 py-4 text-xs font-black uppercase tracking-widest transition-all focus:outline-none"
+                            >
+                                How to test
+                            </button>
+                            <button 
+                                id="tab-feedback" 
+                                role="tab" 
+                                aria-selected="false" 
+                                aria-controls="panel-feedback" 
+                                onclick="switchTab('feedback')"
+                                class="tab-btn px-6 py-4 text-xs font-black uppercase tracking-widest transition-all focus:outline-none border-l border-gray-700"
+                            >
+                                Issues
+                            </button>
+                        </div>
+
+                        <!-- Panel: How to Test -->
+                        <div id="panel-test" role="tabpanel" aria-labelledby="tab-test" class="p-8 space-y-6 flex-grow">
+                            <h3 id="txt-test-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">Step-by-step guide</h3>
+                            <ol id="txt-test-steps" class="space-y-4 text-sm opacity-95 leading-relaxed list-decimal pl-5">
+                                <!-- Steps populated by JS -->
+                            </ol>
+                        </div>
+
+                        <!-- Panel: Issues/Remediations -->
+                        <div id="panel-feedback" role="tabpanel" aria-labelledby="tab-feedback" class="p-8 space-y-6 hidden flex-grow">
+                            <h3 id="txt-feedback-title" class="font-black text-xs uppercase tracking-tighter text-blue-400">What is wrong?</h3>
+                            <div id="critiqueContent" class="text-sm space-y-6 opacity-95 leading-relaxed"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -404,11 +445,19 @@
                 modalBtnOk: "Yes",
                 modalBtnNotOk: "No",
                 submit: "Complete Purchase",
-                showIssues: "Show issues",
-                showRemediations: "Show remediations",
+                tabTest: "How to test",
+                tabIssues: "Issues",
+                tabRemediations: "Remediations",
+                testTitle: "Step-by-step guide",
+                testSteps: [
+                    "Fill the inaccessible form with your mouse.",
+                    "Refresh the page and try with only the keyboard (keys: tab, arrow, enter, space).",
+                    "Switch to the accessible version of the form.",
+                    "Fill the form with only the keyboard again."
+                ],
                 introGood: "Did you notice that the page hasn't visually changed ? Yet the form is now keyboard-friendly. Here is how:",
-                critiqueTitleBad: "What is wrong?",
-                critiqueTitleGood: "How it was fixed",
+                feedbackTitleBad: "What is wrong?",
+                feedbackTitleGood: "How it was fixed",
                 toastSuccess: "Action Successful!",
                 months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
                 statusInaccessible: "Inaccessible",
@@ -427,7 +476,7 @@
                         { f: "Easy help", c: "The help text is now simple to open for everyone, whether using a mouse or a keyboard." },
                         { f: "Smooth path", c: "The invisible obstacles are gone. Your cursor now moves logically from one field to the next." },
                         { f: "Quick date", c: "You can now type your date directly and quickly. It is much faster than clicking through a calendar." },
-                        { f: "Clear focus", c: "The checkbox is clearly highlighted when you reach it, so you always know where you are." },
+                        { f: "Clear focus", c: "The checkbox is clearly highlighted when you reach it, so you always know exactly where you are." },
                         { f: "Ready to click", c: "The selection starts exactly on the 'Yes' button and is clearly visible." }
                     ]
                 }
@@ -447,11 +496,19 @@
                 modalBtnOk: "Oui",
                 modalBtnNotOk: "Non",
                 submit: "Finaliser l'achat",
-                showIssues: "Afficher les problèmes",
-                showRemediations: "Afficher les corrections",
+                tabTest: "Comment tester",
+                tabIssues: "Problèmes",
+                tabRemediations: "Corrections",
+                testTitle: "Guide étape par étape",
+                testSteps: [
+                    "Remplissez le formulaire inaccessible avec votre souris.",
+                    "Rafraîchissez la page et essayez uniquement avec le clavier (touches : tab, flèches, entrée, espace).",
+                    "Passez à la version accessible du formulaire.",
+                    "Remplissez à nouveau le formulaire uniquement avec le clavier."
+                ],
                 introGood: "Avez-vous remarqué que la page n'a pas changé visuellement ? Pourtant, le formulaire est désormais adapté au clavier. Voici comment :",
-                critiqueTitleBad: "Le problème ?",
-                critiqueTitleGood: "La solution",
+                feedbackTitleBad: "Le problème ?",
+                feedbackTitleGood: "La solution",
                 toastSuccess: "Réussi !",
                 months: ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
                 statusInaccessible: "Inaccessible",
@@ -461,7 +518,7 @@
                         { f: "Champ Nom", c: "Votre nom n'est pas proposé automatiquement. Vous devez tout taper à la main à chaque fois." },
                         { f: "Bulle d'aide", c: "L'info est cachée si vous n'utilisez pas de souris. Les utilisateurs clavier ne peuvent pas la voir." },
                         { f: "Le Vide", c: "Il y a une zone invisible entre les cases. Votre curseur s'y perd et vous ne savez plus où vous êtes." },
-                        { f: "Mise à jour", c: "Choisir une date est trop long. Il faut cliquer de nombreuses fois pour arriver à l'année." },
+                        { f: "Date du passeport", c: "Choisir une date est trop long. Il faut cliquer de nombreuses fois pour arriver à l'année." },
                         { f: "Cases à cocher", c: "On ne voit pas quand la case est sélectionnée au clavier. Elle n'est pas mise en évidence." },
                         { f: "Fenêtres", c: "La fenêtre s'ouvre mais on ne voit pas quel bouton est prêt à être cliqué." }
                     ],
@@ -490,11 +547,19 @@
                 modalBtnOk: "Ja",
                 modalBtnNotOk: "Nee",
                 submit: "Voltooien",
-                showIssues: "Toon problemen",
-                showRemediations: "Toon oplossingen",
+                tabTest: "Hoe te testen",
+                tabIssues: "Problemen",
+                tabRemediations: "Oplossingen",
+                testTitle: "Stapsgewijze handleiding",
+                testSteps: [
+                    "Vul het ontoegankelijke formulier in met je muis.",
+                    "Vernieuw de pagina en probeer het alleen met het toetsenbord (toetsen: tab, pijltjes, enter, spatie).",
+                    "Schakel over naar de toegankelijke versie van het formulier.",
+                    "Vul het formulier nogmaals in met alleen het toetsenbord."
+                ],
                 introGood: "Heb je gemerkt dat de pagina visueel niet is veranderd? Toch is het formulier nu toetsenbordvriendelijk. Hier is hoe:",
-                critiqueTitleBad: "Wat is er mis?",
-                critiqueTitleGood: "Hoe het is opgelost",
+                feedbackTitleBad: "Wat is er mis?",
+                feedbackTitleGood: "Hoe het is opgelost",
                 toastSuccess: "Gelukt!",
                 months: ["Januari","Februari","Maart","April","Mei","Juni","Juli","Augustus","September","Oktober","November","December"],
                 statusInaccessible: "Niet toegankelijk",
@@ -505,7 +570,7 @@
                         { f: "Hulpinformatie", c: "Deze info is onzichtbaar zonder muis. Toetsenbordgebruikers zien dit niet." },
                         { f: "Lege gaten", c: "De cursor verdwijnt op onzichtbare plekken tussen de velden." },
                         { f: "Update-veld", c: "Een datum kiezen duurt te lang door het vele klikken." },
-                        { f: "Vinkjes", c: "Je ziet niet wanneer een vinkje geselectreerd is met het toetsenbord." },
+                        { f: "Vinkjes", c: "Je ziet niet wanneer een vinkje geselecteerd is met het toetsenbord." },
                         { f: "Vensters", c: "Je ziet niet welke knop actief is in het nieuwe venster." }
                     ],
                     good: [
@@ -533,11 +598,19 @@
                 modalBtnOk: "Ja",
                 modalBtnNotOk: "Nein",
                 submit: "Kauf abschließen",
-                showIssues: "Probleme anzeigen",
-                showRemediations: "Lösungen anzeigen",
+                tabTest: "Wie man testet",
+                tabIssues: "Probleme",
+                tabRemediations: "Lösungen",
+                testTitle: "Schritt-für-Schritt-Anleitung",
+                testSteps: [
+                    "Füllen Sie das unzugängliche Formular mit Ihrer Maus aus.",
+                    "Aktualisieren Sie die Seite und versuchen Sie es nur mit der Tastatur (Tasten: Tab, Pfeile, Eingabe, Leertaste).",
+                    "Wechseln Sie zur zugänglichen Version des Formulars.",
+                    "Füllen Sie das Formular erneut nur mit der Tastatur aus."
+                ],
                 introGood: "Haben Sie bemerkt, dass sich die Seite optisch nicht verändert hat? Dennoch ist das Formular nun tastaturfreundlich. Hier ist der Grund:",
-                critiqueTitleBad: "Was ist falsch?",
-                critiqueTitleGood: "Wie wir es gelöst haben",
+                feedbackTitleBad: "Was ist falsch?",
+                feedbackTitleGood: "Wie wir es gelöst haben",
                 toastSuccess: "Erfolgreich!",
                 months: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
                 statusInaccessible: "Nicht zugänglich",
@@ -587,10 +660,20 @@
             e.target.value = finalVal;
         }
 
+        function switchTab(tabId) {
+            const isTest = tabId === 'test';
+            document.getElementById('panel-test').classList.toggle('hidden', !isTest);
+            document.getElementById('panel-feedback').classList.toggle('hidden', isTest);
+            
+            document.getElementById('tab-test').setAttribute('aria-selected', isTest);
+            document.getElementById('tab-feedback').setAttribute('aria-selected', !isTest);
+        }
+
         function setLanguage(lang) {
             currentLang = lang;
             const t = translations[lang];
-            
+            const isAccessible = document.getElementById('modeToggle').checked;
+
             const labTitleEl = document.getElementById('txt-lab-title');
             if (labTitleEl) labTitleEl.innerText = t.labTitle;
             
@@ -638,6 +721,15 @@
             
             const accessibleLabelEl = document.getElementById('accessibleLabel');
             if (accessibleLabelEl) accessibleLabelEl.innerText = t.statusAccessible;
+
+            // Tab Buttons
+            document.getElementById('tab-test').innerText = t.tabTest;
+            document.getElementById('tab-feedback').innerText = isAccessible ? t.tabRemediations : t.tabIssues;
+
+            // How to Test Panel
+            document.getElementById('txt-test-title').innerText = t.testTitle;
+            const stepsList = document.getElementById('txt-test-steps');
+            stepsList.innerHTML = t.testSteps.map(step => `<li>${step}</li>`).join('');
             
             const mSelect = document.getElementById('monthSelect');
             if (mSelect) {
@@ -665,11 +757,11 @@
             if (!panel) return;
             const data = isAccessible ? t.critiques.good : t.critiques.bad;
             
-            const toggleCritiqueEl = document.getElementById('txt-toggle-critique');
-            if (toggleCritiqueEl) toggleCritiqueEl.innerText = isAccessible ? t.showRemediations : t.showIssues;
+            const tabFeedback = document.getElementById('tab-feedback');
+            if (tabFeedback) tabFeedback.innerText = isAccessible ? t.tabRemediations : t.tabIssues;
             
-            const critiqueTitleEl = document.getElementById('txt-critique-title');
-            if (critiqueTitleEl) critiqueTitleEl.innerText = isAccessible ? t.critiqueTitleGood : t.critiqueTitleBad;
+            const feedbackTitleEl = document.getElementById('txt-feedback-title');
+            if (feedbackTitleEl) feedbackTitleEl.innerText = isAccessible ? t.feedbackTitleGood : t.feedbackTitleBad;
 
             let html = isAccessible ? `<p class="mb-6 font-bold text-blue-200 italic border-b border-gray-700 pb-4">${t.introGood}</p>` : '';
             html += data.map(item => `
@@ -679,12 +771,6 @@
                 </div>
             `).join('');
             panel.innerHTML = html;
-        }
-
-        function toggleCritiquePanel() {
-            const panel = document.getElementById('critiquePanel');
-            const toggle = document.getElementById('critiqueToggle');
-            if (panel && toggle) panel.classList.toggle('hidden', !toggle.checked);
         }
 
         function toggleTooltip() {
