@@ -8,7 +8,7 @@
     <style>
         .transition-all { transition: all 0.3s ease; }
 
-        /* Hide the default dropdown arrow for datalists/email fields */
+        /* Hide the default dropdown arrow for datalists/fields */
         input::-webkit-calendar-picker-indicator {
             display: none !important;
             -webkit-appearance: none;
@@ -230,10 +230,10 @@
                 <div class="space-y-6">
                     <div class="space-y-6">
                         
-                        <!-- Email Field -->
+                        <!-- Name Field -->
                         <div class="flex flex-col w-48">
                             <div class="flex items-center gap-2 mb-1">
-                                <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">E-mail Address</label>
+                                <label for="inputEmail" id="txt-label-email" class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Name Surname</label>
                                 <div class="relative flex items-center">
                                     <!-- Inaccessible Hit area (24x24) with smaller visual icon (16x16) -->
                                     <span id="emailIconBad" class="info-icon-bad w-6 h-6 flex items-center justify-center cursor-help" tabindex="0">
@@ -241,7 +241,7 @@
                                     </span>
                                     
                                     <!-- Accessible Hit area (24x24) with smaller visual icon (16x16) -->
-                                    <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-6 h-6 flex items-center justify-center cursor-help hover:opacity-80" aria-label="E-mail information">
+                                    <button type="button" id="emailIconGood" onclick="toggleTooltip()" class="info-icon-good hidden w-6 h-6 flex items-center justify-center cursor-help hover:opacity-80" aria-label="Name information">
                                         <span class="w-4 h-4 rounded-full bg-blue-700 text-[9px] flex items-center justify-center font-bold text-white">i</span>
                                     </button>
                                     
@@ -249,7 +249,7 @@
                                 </div>
                             </div>
                             <input 
-                                type="email" 
+                                type="text" 
                                 id="inputEmail" 
                                 class="border border-gray-500 p-2 rounded-lg bg-gray-50 text-sm w-full" 
                                 placeholder=""
@@ -257,7 +257,7 @@
                                 oninput="forceAutocomplete(this)"
                             >
                             <datalist id="email-list">
-                                <option id="email-suggestion" value="john.doe@hotmail.com">
+                                <option id="email-suggestion" value="John Doe">
                             </datalist>
                         </div>
 
@@ -355,12 +355,12 @@
 
     <script>
         let isConfirmed = false;
-        const TARGET_EMAIL = "john.doe@hotmail.com";
+        const TARGET_NAME = "John Doe";
 
         const translations = {
             en: {
                 title: "Keyboard experience",
-                email: "E-mail Address",
+                nameLabel: "Name Surname",
                 helpIcon: "Help icon",
                 hiddenField: "Hidden field",
                 birth: "Birth Date",
@@ -384,15 +384,15 @@
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "E-mail Address", c: "The form doesn't help you fill in your address. You have to type the whole thing manually every time." },
+                        { f: "Name Surname", c: "The form doesn't help you fill in your name. You have to type the whole thing manually every time." },
                         { f: "Help icon", c: "The help text only appears on mouseover. For keyboard users, this information is completely hidden." },
-                        { f: "Hidden field", c: "There is an invisible box between the e-mail and the date field. If you tab into it, you'll lose track of where you are on the page." },
+                        { f: "Hidden field", c: "There is an invisible box between the name and the date field. If you tab into it, you'll lose track of where you are on the page." },
                         { f: "Birth Date", c: "Selecting a date is exhausting. You have to press the 'Tab' key dozens of times to move through every single day." },
                         { f: "I accept the conditions", c: "When you move through the page using your keyboard, this checkbox doesn't light up. You can't see where you are." },
                         { f: "Confirmation Dialog", c: "When the window opens, the keyboard focus doesn't jump into it automatically. It's also hard to see which button is highlighted because the border is too faint." }
                     ],
                     good: [
-                        { f: "E-mail Address", c: "The browser automatically suggests your email address so you don't have to type it out manually." },
+                        { f: "Name Surname", c: "The browser automatically suggests your name so you don't have to type it out manually." },
                         { f: "Help icon", c: "The information now appears on mouseover and click. We removed the focus trigger to avoid cluttering the keyboard flow." },
                         { f: "Hidden field", c: "This unnecessary stop has been removed, ensuring a direct and logical path through the form." },
                         { f: "Birth Date", c: "The calendar button is now integrated into the field and focusable, and manual typing is improved with an automatic mask." },
@@ -403,7 +403,7 @@
             },
             fr: {
                 title: "Expérience clavier",
-                email: "Adresse E-mail",
+                nameLabel: "Nom Prénom",
                 helpIcon: "Icône d'aide",
                 hiddenField: "Champ invisible",
                 birth: "Date de Naissance",
@@ -427,15 +427,15 @@
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "Adresse E-mail", c: "Le formulaire ne vous aide pas à remplir votre adresse. Vous devez tout taper manuellement." },
+                        { f: "Nom Prénom", c: "Le formulaire ne vous aide pas à remplir votre nom. Vous devez tout taper manuellement." },
                         { f: "Icône d'aide", c: "Le texte d'aide ne s'affiche qu'au survol de la souris. Pour les utilisateurs du clavier, cette info est inaccessible." },
-                        { f: "Champ invisible", c: "Il y a une case invisible entre l'e-mail et la date. Vous perdrez le fil de votre navigation si vous tombez dessus." },
+                        { f: "Champ invisible", c: "Il y a une case invisible entre le nom et la date. Vous perdrez le fil de votre navigation si vous tombez dessus." },
                         { f: "Date de Naissance", c: "Choisir une date est épuisant. Vous devez appuyer sur 'Tab' des dizaines de fois." },
                         { f: "J'accepte les conditions", c: "Quand vous naviguez au clavier, cette case ne s'entoure pas de couleur. On ne sait pas où l'on est." },
                         { f: "Fenêtre de Confirmation", c: "Le focus ne se déplace pas automatiquement dans la fenêtre. De plus, il est difficile de voir quel bouton est sélectionné car le contour est trop discret." }
                     ],
                     good: [
-                        { f: "Adresse E-mail", c: "Le navigateur propose automatiquement votre e-mail pour vous faire gagner du temps." },
+                        { f: "Nom Prénom", c: "Le navigateur propose automatiquement votre nom pour vous faire gagner du temps." },
                         { f: "Icône d'aide", c: "L'info s'affiche au survol et au clic. Nous avons retiré le déclencheur au focus pour ne pas encombrer le flux clavier." },
                         { f: "Champ invisible", c: "Cet arrêt inutile a été supprimé pour garantir un parcours fluide dans le formulaire." },
                         { f: "Date de Naissance", c: "La saisie est simplifiée par un masque automatique qui gère les '/' pour vous." },
@@ -446,7 +446,7 @@
             },
             nl: {
                 title: "Toetsenbordervaring",
-                email: "E-mailadres",
+                nameLabel: "Naam Voornaam",
                 helpIcon: "Help-icoon",
                 hiddenField: "Verborgen veld",
                 birth: "Geboortedatum",
@@ -470,15 +470,15 @@
                 statusAccessible: "Accessible",
                 critiques: {
                     bad: [
-                        { f: "E-mailadres", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
+                        { f: "Naam Voornaam", c: "Het formulier helpt je niet bij het invullen. Je moet alles handmatig typen." },
                         { f: "Help-icoon", c: "De helptekst verschijnt alleen bij mouseover. Toetsenbordgebruikers kunnen deze informatie niet zien." },
-                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de e-mail en de datum. Je raakt de weg kwijt op de pagina." },
+                        { f: "Verborgen veld", c: "Er is een onzichtbaar vak tussen de naam en de datum. Je raakt de weg kwijt op de pagina." },
                         { f: "Geboortedatum", c: "Een datum kiezen is vermoeiend. Je moet tientallen keren op 'Tab' drukken." },
                         { f: "Ik accepteer de voorwaarden", c: "Wanneer je met het toetsenbord navigeert, zie je geen kader om deze checkbox." },
                         { f: "Bevestigingsvenster", c: "Bij het openen springt de focus niet automatisch naar het venster. De markering van de knoppen is ook te vaag." }
                     ],
                     good: [
-                        { f: "E-mailadres", c: "De browser stelt je e-mailadres automatisch voor bij elke letter." },
+                        { f: "Naam Voornaam", c: "De browser stelt je naam automatisch voor bij elke letter." },
                         { f: "Help-icoon", c: "Informatie verschijnt bij mouseover en klik. We hebben de focus-trigger verwijderd voor een rustiger keyboard-traject." },
                         { f: "Hidden field", c: "Deze onnodige tussenstop is verwijderd voor een vlotter verloop." },
                         { f: "Geboortedatum", c: "De kalenderknop is nu geïntegreerd in het veld en focusbaar, en invoer is verbeterd met een masker." },
@@ -496,7 +496,7 @@
             if (!document.getElementById('modeToggle').checked) return;
             const suggestion = document.getElementById('email-suggestion');
             const val = input.value.toLowerCase();
-            suggestion.value = val.length > 0 ? TARGET_EMAIL : "";
+            suggestion.value = val.length > 0 ? TARGET_NAME : "";
         }
 
         // Mask logic for dd/mm/yyyy
@@ -521,7 +521,7 @@
             currentLang = lang;
             const t = translations[lang];
             document.getElementById('txt-title').innerText = t.title;
-            document.getElementById('txt-label-email').innerText = t.email;
+            document.getElementById('txt-label-email').innerText = t.nameLabel;
             document.getElementById('txt-label-birth').innerText = t.birth;
             document.getElementById('txt-format-hint').innerText = t.format;
             document.getElementById('txt-tooltip').innerText = t.tooltip;
@@ -652,7 +652,7 @@
                 inputBirth.oninput = handleDateInput;
                 document.getElementById('calendarToggleBtn').classList.remove('hidden');
                 document.getElementById('calendarIconBad').classList.add('hidden');
-                inputEmail.setAttribute('autocomplete', 'email');
+                inputEmail.setAttribute('autocomplete', 'name');
                 inputEmail.setAttribute('list', 'email-list');
                 document.getElementById('emailIconBad').classList.add('hidden');
                 document.getElementById('emailIconGood').classList.remove('hidden');
